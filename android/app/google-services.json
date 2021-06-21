@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "771472799633",
+    "firebase_url": "https://infoshare-ffa9e.firebaseio.com",
+    "project_id": "infoshare-ffa9e",
+    "storage_bucket": "infoshare-ffa9e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771472799633:android:f8ee3ef4d64bb530464c30",
+        "android_client_info": {
+          "package_name": "com.example.flutter_intelij"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "771472799633-b38mrgqseknnknvehv20n5ubi0h7s1ju.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9H6Bqk9yrqnXjySGdrb_xJyeOwQeEJDE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "771472799633-b38mrgqseknnknvehv20n5ubi0h7s1ju.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
