@@ -99,6 +99,8 @@ Widget editSubjectTimeSlotPopupBuilder(QueryDocumentSnapshot doc){
   );
 }
 
+
+// this out put the add new subject popup window
 Widget addNewSubjectTimeSlotPopUpBuilder(String subjectCode){
   String day;
   String location;
