@@ -45,6 +45,7 @@ class _SignInState extends State<SignIn> {
         child: Form(
           key: _formKey,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               SizedBox(height: 20.0,),
               TextFormField(
@@ -68,33 +69,39 @@ class _SignInState extends State<SignIn> {
                 },
               ),
               SizedBox(height: 20.0,),
-              RaisedButton(
-                child: Text(
-                  'Sign in',
-                  style: TextStyle(color: Colors.white),
-                ),
-                onPressed: () async {
-                  if (_formKey.currentState.validate()) {
-                    setState(() {
-                      loading = true;
-                    });
-                    dynamic result = await _auth.signInWithEmailAndPassword(email, password);
-                    if (result.runtimeType == String) {
+              Padding(
+                padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                child: TextButton(
+                  child: Text(
+                    'Sign in',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
                       setState(() {
-                        error = result;
-                        loading = false;
+                        loading = true;
                       });
-                    } else {
-                      setState(() {
-                        error = 'Email or password is Wrong';
-                        loading = false;
-                      });
+                      dynamic result = await _auth.signInWithEmailAndPassword(email, password);
+                      if (result.runtimeType == String) {
+                        setState(() {
+                          error = result;
+                          loading = false;
+                        });
+                      } else {
+                        setState(() {
+                          error = 'Email or password is Wrong';
+                          loading = false;
+                        });
+                      }
                     }
-                  }
-                },
-                elevation: 0.0,
-                color: Colors.cyan,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(Colors.teal),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25)
+                    ))
+                  ),
+                ),
               ),
               SizedBox(height: 20.0,),
               Text(
