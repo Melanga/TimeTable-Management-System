@@ -12,26 +12,26 @@ class SubjectCRUDMethods {
     catchError((e) => {print(e)});
   }
 
-  Future<void> addSubjectTimeSlotData(subjectCode, time, day, duration, location) async{
+  Future<void> addSubjectTimeSlotData(subjectCode, startTime, day, endTime, location) async{
     CollectionReference subjects = FirebaseFirestore.instance.collection('SubjectTimeSlot');
     subjects.add({
       'course_Code': subjectCode,
-      'date': day,
-      'duration': duration,
+      'day': day,
+      'start_Time': startTime,
+      'end_Time': endTime,
       'location': location,
-      'time': time,
     }).then((value) => print('Added')).
     catchError((e) => {print(e)});
   }
 
-  Future<void> editSubjectTimeSlotData(subjectCode, timeSlotId, time, day, duration, location) async{
+  Future<void> editSubjectTimeSlotData(subjectCode, timeSlotId, startTime, day, endTime, location) async{
     CollectionReference subjects = FirebaseFirestore.instance.collection('SubjectTimeSlot');
     subjects.doc(timeSlotId).set({
       'course_Code': subjectCode,
-      'date': day,
-      'duration': duration,
+      'day': day,
+      'start_Time': startTime,
+      'end_Time': endTime,
       'location': location,
-      'time': time,
     }).then((value) => print('Added')).
     catchError((e) => {print(e)});
   }

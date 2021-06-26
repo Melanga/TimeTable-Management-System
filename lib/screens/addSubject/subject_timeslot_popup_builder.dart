@@ -13,7 +13,8 @@ class EditSubjectTimeSlotPopupBuilder extends StatefulWidget {
 }
 
 class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPopupBuilder> {
-  TimeOfDay newTime;
+  TimeOfDay newStartTime;
+  TimeOfDay newEndTime;
   String dropdownValue;
   //TimeOfDay newTime;
 
@@ -21,21 +22,25 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
   void initState() {
     // TODO: implement initState
     super.initState();
-    newTime = TimeOfDay(
-        hour: int.parse(widget.doc.data()['time'].toString().substring(0,2)),
-        minute: int.parse(widget.doc.data()['time'].toString().substring(6,7)));
-    dropdownValue = widget.doc.data()['date'];
+    newStartTime = TimeOfDay(
+        hour: int.parse(widget.doc.data()['start_Time'].toString().substring(0,2)),
+        minute: int.parse(widget.doc.data()['start_Time'].toString().substring(6,7)));
+    newEndTime = TimeOfDay(
+        hour: int.parse(widget.doc.data()['end_Time'].toString().substring(0,2)),
+        minute: int.parse(widget.doc.data()['end_Time'].toString().substring(6,7)));
+    dropdownValue = widget.doc.data()['day'];
   }
 
   @override
   Widget build(BuildContext context) {
 
     String timeSlotId = widget.doc.id;
-    String day = widget.doc.data()['date'];
+    String day = widget.doc.data()['day'];
     String location = widget.doc.data()['location'];
-    String duration = widget.doc.data()['duration'].toString();
-    String time = widget.doc.data()['time'];
-    TimeOfDay newTime = this.newTime;
+    String startTime = widget.doc.data()['start_Time'];
+    String endTime = widget.doc.data()['end_Time'];
+    TimeOfDay newStartTime = this.newStartTime;
+    TimeOfDay newEndTime = this.newEndTime;
     List <String>dayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     return Hero(
@@ -105,21 +110,26 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                     ),
                     ListTile(
                       title: Text(
-                        "${newTime.hour.toString().padLeft(2, "0")} : ${newTime.minute.toString().padLeft(2, "0")}",
+                        "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}",
                         style: TextStyle(color: Colors.white),
                       ),
                       trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
-                      onTap: _pickTime,
+                      onTap: _pickStartTime,
                     ),
                     SizedBox(height: 20.0,),
-                    TextFormField(
+                    Text(
+                      "Select End Time",
                       style: TextStyle(
                           color: Colors.white
                       ),
-                      initialValue: duration,
-                      onChanged: (inputValue)  {
-                        duration = inputValue;
-                      },
+                    ),
+                    ListTile(
+                      title: Text(
+                        "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
+                      onTap: _pickEndTime,
                     ),
                     SizedBox(height: 20.0,),
                     TextButton(
@@ -134,8 +144,9 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                       onPressed: () {
                         SubjectCRUDMethods crud = new SubjectCRUDMethods();
                         day = this.dropdownValue;
-                        time = "${newTime.hour.toString().padLeft(2, "0")} : ${newTime.minute.toString().padLeft(2, "0")}";
-                        crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, time, day, duration, location);
+                        startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
+                        endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
+                        crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
                       },
                       child: Text(
                         "Save",
@@ -155,8 +166,8 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
     );
   }
 
-  _pickTime() async{
-    TimeOfDay initTime = newTime;
+  _pickStartTime() async{
+    TimeOfDay initTime = newStartTime;
 
     TimeOfDay selectedTime = await showTimePicker(
         context: context,
@@ -165,7 +176,22 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
 
     if(selectedTime != null){
       setState(() {
-        newTime = selectedTime;
+        newStartTime = selectedTime;
+      });
+    }
+  }
+
+  _pickEndTime() async{
+    TimeOfDay initTime = newEndTime;
+
+    TimeOfDay selectedTime = await showTimePicker(
+        context: context,
+        initialTime: initTime
+    );
+
+    if(selectedTime != null){
+      setState(() {
+        newEndTime = selectedTime;
       });
     }
   }
@@ -183,21 +209,24 @@ class AddNewSubjectTimeSlotPopupBuilder extends StatefulWidget {
 class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlotPopupBuilder> {
   String day;
   String location;
-  String duration;
-  String time;
+  String startTime;
+  String endTime;
   String dropdownValue = 'Monday';
-  TimeOfDay newTime;
+  TimeOfDay newStartTime;
+  TimeOfDay newEndTime;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    newTime = TimeOfDay.now();
+    newStartTime = TimeOfDay.now();
+    newEndTime = TimeOfDay.now();
   }
 
   @override
   Widget build(BuildContext context) {
-    TimeOfDay newTime = this.newTime;
+    TimeOfDay newStartTime = this.newStartTime;
+    TimeOfDay newEndTime = this.newEndTime;
     List <String>dayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     return Padding(
@@ -271,26 +300,26 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
                   ),
                   ListTile(
                     title: Text(
-                      "${newTime.hour.toString().padLeft(2, "0")} : ${newTime.minute.toString().padLeft(2, "0")}",
+                      "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}",
                       style: TextStyle(color: Colors.white),
                     ),
                     trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
-                    onTap: _pickTime,
+                    onTap: _pickStartTime,
                   ),
                   SizedBox(height: 20.0,),
-                  TextFormField(
-                    decoration: InputDecoration(
-                        hintText: "Enter Duration",
-                        hintStyle: TextStyle(
-                          color: Colors.white70,
-                        )
-                    ),
+                  Text(
+                    "Select End Time",
                     style: TextStyle(
                         color: Colors.white
                     ),
-                    onChanged: (inputValue)  {
-                      this.duration = inputValue;
-                    },
+                  ),
+                  ListTile(
+                    title: Text(
+                      "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
+                    onTap: _pickEndTime,
                   ),
                   SizedBox(height: 20.0,),
                   TextButton(
@@ -304,8 +333,9 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
                     ),
                     onPressed: () {
                       SubjectCRUDMethods crud = new SubjectCRUDMethods();
-                      time = "${newTime.hour.toString().padLeft(2, "0")} : ${newTime.minute.toString().padLeft(2, "0")}";
-                      crud.addSubjectTimeSlotData(widget.subjectCode, this.time, this.day, this.duration, this.location);
+                      startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
+                      endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
+                      crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
                     },
                     child: Text(
                       "Save",
@@ -324,7 +354,22 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
     );
   }
 
-  _pickTime() async{
+  _pickStartTime() async {
+    TimeOfDay initTime = TimeOfDay.now();
+
+    TimeOfDay selectedTime = await showTimePicker(
+        context: context,
+        initialTime: initTime
+    );
+
+    if (selectedTime != null) {
+      setState(() {
+        newStartTime = selectedTime;
+      });
+    }
+  }
+
+  _pickEndTime() async{
     TimeOfDay initTime = TimeOfDay.now();
 
     TimeOfDay selectedTime = await showTimePicker(
@@ -334,7 +379,7 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
 
     if(selectedTime != null){
       setState(() {
-        newTime = selectedTime;
+        newEndTime = selectedTime;
       });
     }
   }

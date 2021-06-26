@@ -29,8 +29,8 @@ class _SubjectTimeSlotBuilderState extends State<SubjectTimeSlotBuilder> {
                           shadowColor: Colors.teal,
                           color: Color(0x9fe3bf),
                           child: ListTile(
-                            title: Text(doc2.data()['date']),
-                            subtitle: Text(doc2.data()['time']),
+                            title: Text(doc2.data()['day']),
+                            subtitle: Text("${doc2.data()['start_Time']} to ${doc2.data()['end_Time']}"),
                             trailing: Text(doc2.data()['location']),
                             onTap: (){
                               Navigator.of(context).push(
