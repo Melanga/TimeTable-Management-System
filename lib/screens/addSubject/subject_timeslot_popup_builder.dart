@@ -14,6 +14,7 @@ class EditSubjectTimeSlotPopupBuilder extends StatefulWidget {
 
 class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPopupBuilder> {
   TimeOfDay newTime;
+  String dropdownValue;
   //TimeOfDay newTime;
 
   @override
@@ -23,6 +24,7 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
     newTime = TimeOfDay(
         hour: int.parse(widget.doc.data()['time'].toString().substring(0,2)),
         minute: int.parse(widget.doc.data()['time'].toString().substring(6,7)));
+    dropdownValue = widget.doc.data()['date'];
   }
 
   @override
@@ -53,15 +55,36 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    TextFormField(
-                      style: TextStyle(
-                          color: Colors.white
-                      ),
-                      initialValue: day,
-                      //this create new subject fix it
-                      onChanged: (inputValue)  {
-                        day = inputValue;
+                    DropdownButton<String>(
+                      value: dropdownValue,
+                      icon: const Icon(Icons.arrow_downward, color: Colors.white,),
+                      isExpanded: true,
+                      iconSize: 24,
+                      elevation: 16,
+                      style: const TextStyle(color: Colors.black),
+                      onChanged: (String newValue) {
+                        setState(() {
+                          dropdownValue = newValue;
+                        });
                       },
+                      selectedItemBuilder: (BuildContext context) {
+                        return dayList.map((String value) {
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                            child: Text(
+                                dropdownValue,
+                                style: const TextStyle(color: Colors.white,)
+                            ),
+                          );
+                        }).toList();
+                      },
+                      items: dayList
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value, style: TextStyle(color: Colors.black),),
+                        );
+                      }).toList(),
                     ),
                     SizedBox(height: 20),
                     TextFormField(
@@ -110,6 +133,7 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                       ),
                       onPressed: () {
                         SubjectCRUDMethods crud = new SubjectCRUDMethods();
+                        day = this.dropdownValue;
                         time = "${newTime.hour.toString().padLeft(2, "0")} : ${newTime.minute.toString().padLeft(2, "0")}";
                         crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, time, day, duration, location);
                       },
@@ -161,7 +185,7 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
   String location;
   String duration;
   String time;
-  String dayDropDownValue;
+  String dropdownValue = 'Monday';
   TimeOfDay newTime;
 
   @override
@@ -174,7 +198,6 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
   @override
   Widget build(BuildContext context) {
     TimeOfDay newTime = this.newTime;
-    this.dayDropDownValue = "Sunday";
     List <String>dayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
     return Padding(
@@ -192,34 +215,37 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  /*DropdownButton(
-                    value: dayDropDownValue,
-                    onChanged: (newValue) {
+                  DropdownButton<String>(
+                    value: dropdownValue,
+                    icon: const Icon(Icons.arrow_downward, color: Colors.white,),
+                    isExpanded: true,
+                    iconSize: 24,
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.black),
+                    onChanged: (String newValue) {
+                      this.day = newValue;
                       setState(() {
-                        this.dayDropDownValue = newValue;
+                        dropdownValue = newValue;
                       });
                     },
-                    items: dayList.map<DropdownMenuItem<String>>((String value) {
+                    selectedItemBuilder: (BuildContext context) {
+                      return dayList.map((String value) {
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                          child: Text(
+                            dropdownValue,
+                            style: const TextStyle(color: Colors.white,)
+                          ),
+                        );
+                      }).toList();
+                    },
+                    items: dayList
+                        .map<DropdownMenuItem<String>>((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
-                        child: Text(value),
+                        child: Text(value, style: TextStyle(color: Colors.black),),
                       );
                     }).toList(),
-                  ),*/
-                  TextFormField(
-                    decoration: InputDecoration(
-                        hintText: "Enter Day",
-                        hintStyle: TextStyle(
-                          color: Colors.white70,
-                        )
-                    ),
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
-                    //this create new subject fix it
-                    onChanged: (inputValue)  {
-                      this.day = inputValue;
-                    },
                   ),
                   SizedBox(height: 20),
                   TextFormField(
