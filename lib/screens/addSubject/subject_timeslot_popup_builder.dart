@@ -166,6 +166,7 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
     );
   }
 
+
   _pickStartTime() async{
     TimeOfDay initTime = newStartTime;
 
@@ -180,6 +181,7 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
       });
     }
   }
+
 
   _pickEndTime() async{
     TimeOfDay initTime = newEndTime;

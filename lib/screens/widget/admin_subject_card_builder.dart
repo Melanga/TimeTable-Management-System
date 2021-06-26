@@ -17,15 +17,12 @@ class AdminSubjectCardBuilder{
                   padding: EdgeInsets.zero,
                   child: Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25)
+                        borderRadius: BorderRadius.circular(35)
                     ),
                     child: ListTile(
+                      contentPadding: EdgeInsets.fromLTRB(20, 7, 20, 7),
                       title: Text(doc.data()['subject_Name']),
-                      subtitle: Text(doc.data()['start_date'].toDate()
-                          .toString()
-                          .substring(0, 10) + " to " + doc.data()['end_date']
-                          .toDate().toString()
-                          .substring(0, 10)),
+                      //subtitle: Text(doc.id),
                       trailing: Text(doc.id),
                       onTap: (){
                         Navigator.of(context).push(

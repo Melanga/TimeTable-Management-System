@@ -18,10 +18,9 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
 
   @override
   Widget build(BuildContext context) {
+    final bottom = MediaQuery.of(context).viewInsets.bottom;
     String subjectCode = widget.doc.id;
     String subjectName = widget.doc.data()['subject_Name'];
-    DateTime startDate = widget.doc.data()['start_date'].toDate();
-    DateTime endDate = widget.doc.data()['end_date'].toDate();
     String subjectNote = widget.doc.data()['subject_note'];
     return Hero(
       tag: widget.doc.id,
@@ -33,7 +32,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
           ),
           child: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.fromLTRB(20, 20, 20, bottom),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -51,26 +50,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                       subjectName = inputValue;
                     },
                   ),
-                  SizedBox(height: 20),
-                  Text("Select Start Date", style: TextStyle(fontWeight: FontWeight.bold)),
-                  ListTile(
-                    title: Text(
-                      "Date: ${startDate.year}, ${startDate.month}, ${startDate.day}",
-                      style: TextStyle(),
-                    ),
-                    trailing: Icon(Icons.keyboard_arrow_down),
-                    onTap: () {},
-                  ),
                   SizedBox(height: 20.0,),
-                  Text("Select End Date", style: TextStyle(fontWeight: FontWeight.bold)),
-                  ListTile(
-                    title: Text(
-                      "Date: ${endDate.year}, ${endDate.month}, ${endDate.day}",
-                      style: TextStyle(),
-                    ),
-                    trailing: Icon(Icons.keyboard_arrow_down),
-                    onTap: (){},
-                  ),
                   SubjectTimeSlotBuilder(subjectCode),
                   GestureDetector(
                     onTap: (){
@@ -130,7 +110,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                     ),
                     onPressed: () {
                       SubjectCRUDMethods crud = new SubjectCRUDMethods();
-                      crud.addSubjectData(subjectCode,  subjectName, startDate, endDate, subjectNote);
+                      crud.addSubjectData(subjectCode,  subjectName, subjectNote);
                     },
                     child: Text(
                       "Save",
@@ -140,6 +120,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                       ),
                     ),
                   ),
+                  SizedBox(height: 60.0,),
                   //subjectTimeSlotBuilder(subjectCode),
                 ],
               ),
