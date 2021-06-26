@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_intelij/screens/addSubject/edit_subject_timeslot_popup_builder.dart';
+import 'package:flutter_intelij/screens/addSubject/subject_timeslot_popup_builder.dart';
 import 'package:flutter_intelij/shared/hero_dialog_route.dart';
 class SubjectTimeSlotBuilder extends StatefulWidget {
   const SubjectTimeSlotBuilder(this.subjectCode, {Key key}) : super(key: key);
@@ -36,7 +36,7 @@ class _SubjectTimeSlotBuilderState extends State<SubjectTimeSlotBuilder> {
                               Navigator.of(context).push(
                                 HeroDialogRoute(
                                   builder: (context) => Center(
-                                      child: editSubjectTimeSlotPopupBuilder(doc2)
+                                      child: EditSubjectTimeSlotPopupBuilder(doc2, widget.subjectCode)
                                   ),
                                 ),
                               );

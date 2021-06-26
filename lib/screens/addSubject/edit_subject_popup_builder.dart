@@ -5,7 +5,7 @@ import 'package:flutter_intelij/services/subject_collection_crud.dart';
 import 'package:flutter_intelij/shared/constant.dart';
 import 'package:flutter_intelij/shared/hero_dialog_route.dart';
 
-import 'edit_subject_timeslot_popup_builder.dart';
+import 'subject_timeslot_popup_builder.dart';
 
 class EditSubjectPopUpBuilder extends StatefulWidget {
   const EditSubjectPopUpBuilder(this.doc, {Key key}) : super(key: key);
@@ -77,7 +77,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                       Navigator.of(context).push(
                         HeroDialogRoute(
                           builder: (context) => Center(
-                              child: addNewSubjectTimeSlotPopUpBuilder(subjectCode)
+                              child: AddNewSubjectTimeSlotPopupBuilder(subjectCode)
                           ),
                         ),
                       );
@@ -100,7 +100,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                               Navigator.of(context).push(
                                 HeroDialogRoute(
                                   builder: (context) => Center(
-                                      child: addNewSubjectTimeSlotPopUpBuilder(subjectCode)
+                                      child: AddNewSubjectTimeSlotPopupBuilder(subjectCode)
                                   ),
                                 ),
                               );
@@ -130,7 +130,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                     ),
                     onPressed: () {
                       SubjectCRUDMethods crud = new SubjectCRUDMethods();
-                      crud.addSubjectData(subjectCode, subjectName, startDate, endDate, subjectNote);
+                      crud.addSubjectData(subjectCode,  subjectName, startDate, endDate, subjectNote);
                     },
                     child: Text(
                       "Save",
@@ -149,4 +149,5 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
       ),
     );
   }
+
 }
