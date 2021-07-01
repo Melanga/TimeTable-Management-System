@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_intelij/screens/addSubject/subject_time_slot_builder.dart';
+import 'package:flutter_intelij/screens/addSubject/subjectGroup/subject_group_builder.dart';
+import 'package:flutter_intelij/screens/addSubject/subjectTimeSlot/subject_time_slot_builder.dart';
 import 'package:flutter_intelij/services/subject_collection_crud.dart';
 import 'package:flutter_intelij/shared/constant.dart';
 import 'package:flutter_intelij/shared/hero_dialog_route.dart';
 
-import 'subject_timeslot_popup_builder.dart';
+import 'subjectTimeSlot/subject_timeslot_popup_builder.dart';
 
 class EditSubjectPopUpBuilder extends StatefulWidget {
   const EditSubjectPopUpBuilder(this.doc, {Key key}) : super(key: key);
@@ -91,6 +92,8 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                     ),
                   ),
                   SizedBox(height: 20.0,),
+                  SubjectGroupBuilder(subjectCode),
+                  SizedBox(height: 20.0,),
                   Text("Add subject note", style: TextStyle(fontWeight: FontWeight.bold)),
                   TextFormField(
                     initialValue: subjectNote,
@@ -111,6 +114,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                     onPressed: () {
                       SubjectCRUDMethods crud = new SubjectCRUDMethods();
                       crud.addSubjectData(subjectCode,  subjectName, subjectNote);
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "Save",
@@ -120,8 +124,30 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 60.0,),
-                  //subjectTimeSlotBuilder(subjectCode),
+                  SizedBox(height: 10.0,),
+                  TextButton(
+                    style: ButtonStyle(
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18.0),
+                          )
+                      ),
+                      backgroundColor: MaterialStateProperty.all(Colors.red),
+                    ),
+                    onPressed: () {
+                      SubjectCRUDMethods crud = new SubjectCRUDMethods();
+                      crud.deleteSubjectData(subjectCode);
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Delete",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30.0,)
                 ],
               ),
             ),

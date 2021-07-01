@@ -147,6 +147,7 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                         startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
                         endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
                         crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
+                        Navigator.pop(context);
                       },
                       child: Text(
                         "Save",
@@ -338,6 +339,7 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
                       startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
                       endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
                       crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
+                      Navigator.pop(context);
                     },
                     child: Text(
                       "Save",

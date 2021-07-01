@@ -10,6 +10,12 @@ class SubjectCRUDMethods {
     catchError((e) => {print(e)});
   }
 
+  Future<void> deleteSubjectData(subjectCode) async{
+    CollectionReference subjects = FirebaseFirestore.instance.collection('Subjects');
+    subjects.doc(subjectCode).delete().then((value) => print('Deleted')).
+    catchError((e) => {print(e)});
+  }
+
   Future<void> addSubjectTimeSlotData(subjectCode, startTime, day, endTime, location) async{
     CollectionReference subjects = FirebaseFirestore.instance.collection('SubjectTimeSlot');
     subjects.add({
@@ -31,6 +37,22 @@ class SubjectCRUDMethods {
       'end_Time': endTime,
       'location': location,
     }).then((value) => print('Added')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> addSubjectGroupData(subjectCode, degree, year) async{
+    CollectionReference subjectGroup = FirebaseFirestore.instance.collection('SubjectGroup');
+    subjectGroup.add({
+      'course_Code': subjectCode,
+      'degree': degree,
+      'year': year
+    }).then((value) => print('Added')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> deleteSubjectGroupData(docId) async{
+    CollectionReference subjectGroup = FirebaseFirestore.instance.collection('SubjectGroup');
+    subjectGroup.doc(docId).delete().then((value) => print('deleted')).
     catchError((e) => {print(e)});
   }
 }
