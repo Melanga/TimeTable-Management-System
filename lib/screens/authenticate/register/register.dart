@@ -28,7 +28,7 @@ class _RegisterState extends State<Register> {
     return loading ? Loading() : Scaffold(
         appBar: AppBar(
           backgroundColor: Color(0xFF012329),
-          title: Text("Sign in"),
+          title: Text("Register"),
           actions: <Widget>[
             FlatButton.icon(
               icon: Icon(Icons.person, color: Colors.white,),
@@ -45,6 +45,7 @@ class _RegisterState extends State<Register> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 SizedBox(height: 20.0,),
                 TextFormField(
@@ -68,33 +69,39 @@ class _RegisterState extends State<Register> {
                   },
                 ),
                 SizedBox(height: 20.0,),
-                RaisedButton(
-                  child: Text(
-                    'Register',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: ()async {
-                    if (_formKey.currentState.validate()) {
-                      setState(() {
-                        loading = true;
-                      });
-                      dynamic result = await _auth.registerWithEmailAndPassword(email, password);
-                      if (result.runtimeType == String) {
-                        setState(()  {
-                          error = result;
-                          loading = false;
-                        });
-                      } else {
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                  child: TextButton(
+                    child: Text(
+                      'Register',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: ()async {
+                      if (_formKey.currentState.validate()) {
                         setState(() {
-                          error = 'Enter a valid email address';
-                          loading = false;
+                          loading = true;
                         });
+                        dynamic result = await _auth.registerWithEmailAndPassword(email, password);
+                        if (result.runtimeType == String) {
+                          setState(()  {
+                            error = result;
+                            loading = false;
+                          });
+                        } else {
+                          setState(() {
+                            error = 'Enter a valid email address';
+                            loading = false;
+                          });
+                        }
                       }
-                    }
-                  },
-                  elevation: 0.0,
-                  color: Colors.cyan,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+                    },
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(Colors.teal),
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25)
+                        ))
+                    ),
+                  ),
                 ),
                 SizedBox(height: 20.0,),
                 Text(

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/addSubject/add_new_subject.dart';
 import 'package:flutter_intelij/screens/home/admin_settings_drawer.dart';
+import 'package:flutter_intelij/screens/widget/admin_subject_card_builder.dart';
 import 'package:flutter_intelij/services/auth.dart';
 
 
@@ -178,36 +179,7 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
                             ),
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: StreamBuilder<QuerySnapshot>(
-                                  stream: FirebaseFirestore.instance.collection("Subjects").snapshots(),
-                                  builder: (context, snapshot){
-                                    if (snapshot.hasData){
-                                      return ListView(
-                                        children: snapshot.data.docs.map((doc) {
-                                          return Card(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(25)
-                                            ),
-                                            child: ListTile(
-                                              title: Text(doc.data()['subject_Name']),
-                                              subtitle: Text(doc.data()['start_date'].toDate()
-                                                  .toString()
-                                                  .substring(0, 10) + " to " + doc.data()['end_date']
-                                                  .toDate().toString()
-                                                  .substring(0, 10)),
-                                              trailing: Text(doc.id),
-                                              onTap: (){
-
-                                              },
-                                            ),
-                                          );
-                                        }).toList(),
-                                      );
-                                    } else {
-                                      return Text("no data");
-                                    }
-                                  }
-                              ),
+                              child: AdminSubjectCardBuilder().adminSubjectCardBuilder
                             ),
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intelij/screens/addSubject/subject_time_slot_builder.dart';
 import 'package:flutter_intelij/services/subject_collection_crud.dart';
 import 'package:flutter_intelij/shared/constant.dart';
 
@@ -59,7 +60,7 @@ class _AddNewSubjectState extends State<AddNewSubject> {
                   setState(() => {subjectName = inputValue});
                 },
               ),
-              SizedBox(height: 20.0,),
+              /*SizedBox(height: 20.0,),
               Text("Select Start Date", style: textStyle,),
               ListTile(
                 title: Text(
@@ -78,13 +79,13 @@ class _AddNewSubjectState extends State<AddNewSubject> {
                 ),
                 trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white,),
                 onTap: _pickEndDate,
-              ),
+              ),*/
               SizedBox(height: 20.0,),
               TextFormField(
                 decoration: textInputDecoration.copyWith(hintText: 'Subject Note'),
                 onChanged: (inputValue)  {
                   if (inputValue != null){
-                    setState(() => {subjectName = inputValue});
+                    setState(() => {subjectNote = inputValue});
                   }
                 },
               ),
@@ -100,12 +101,7 @@ class _AddNewSubjectState extends State<AddNewSubject> {
                 ),
                 onPressed: () {
                   SubjectCRUDMethods crud = new SubjectCRUDMethods();
-                  var subjectData = new Map();
-                  subjectData['subject_Name'] = this.subjectName;
-                  subjectData['start_date'] = this.startDate;
-                  subjectData['end_date'] = this.endDate;
-                  subjectData['subject_note'] = this.subjectNote;
-                  crud.addSubjectData(this.subjectCode, this.subjectName, this.startDate, this.endDate, this.subjectNote);
+                  crud.addSubjectData(this.subjectCode, this.subjectName, this.subjectNote);
                 },
                 child: Text(
                   "Save",
@@ -123,7 +119,7 @@ class _AddNewSubjectState extends State<AddNewSubject> {
     );
   }
 
-  _pickStartDate() async {
+  /*_pickStartDate() async {
     DateTime selectedDate = await showDatePicker(
         context: context,
         initialDate: startDate,
@@ -147,6 +143,6 @@ class _AddNewSubjectState extends State<AddNewSubject> {
         endDate = selectedDate;
       });
     }
-  }
+  }*/
 
 }
