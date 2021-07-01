@@ -5,6 +5,7 @@ import 'package:flutter_intelij/screens/addSubject/add_new_subject.dart';
 import 'package:flutter_intelij/screens/home/admin_settings_drawer.dart';
 import 'package:flutter_intelij/screens/widget/admin_subject_card_builder.dart';
 import 'package:flutter_intelij/services/auth.dart';
+import 'package:flutter_intelij/shared/hero_dialog_route.dart';
 
 
 class AdminPanelWidget extends StatefulWidget {
@@ -62,8 +63,11 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
       backgroundColor: Color(0xFF003640),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Navigator.push(context, new MaterialPageRoute(
-              builder: (context) => AddNewSubject()));
+          Navigator.of(context).push(
+            HeroDialogRoute(builder: (context) => Center(
+                child: AddNewSubjectPopUp()
+            ))
+          );
         },
         backgroundColor: Color(0x00606b),
         icon: Icon(
