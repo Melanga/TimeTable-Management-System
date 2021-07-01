@@ -12,6 +12,18 @@ class SubjectCRUDMethods {
 
   Future<void> deleteSubjectData(subjectCode) async{
     CollectionReference subjects = FirebaseFirestore.instance.collection('Subjects');
+    CollectionReference subjectGroups = FirebaseFirestore.instance.collection('SubjectGroup');
+    CollectionReference subjectTimeSlots = FirebaseFirestore.instance.collection('SubjectTimeSlot');
+    QuerySnapshot subjectGroup = await subjectGroups.where('course_Code', isEqualTo: subjectCode).get();
+    subjectGroup.docs.forEach((doc1) {
+      subjectGroups.doc(doc1.id).delete().then((value) => print('Deleted')).
+      catchError((e) => {print(e)});
+    });
+    QuerySnapshot subjectTimeSlot = await subjectTimeSlots.where('course_Code', isEqualTo: subjectCode).get();
+    subjectTimeSlot.docs.forEach((doc2) {
+      subjectTimeSlots.doc(doc2.id).delete().then((value) => print('Deleted')).
+      catchError((e) => {print(e)});
+    });
     subjects.doc(subjectCode).delete().then((value) => print('Deleted')).
     catchError((e) => {print(e)});
   }

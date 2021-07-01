@@ -43,25 +43,28 @@ class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
                         hintText: "Enter Course Code"
                       ),
                       onChanged: (inputValue)  {
+                        subjectCode = inputValue;
                         setState(() => {subjectCode = inputValue});
                       },
                     ),
                     SizedBox(height: 20),
                     TextFormField(
                       decoration: InputDecoration(
-                          hintText: "Enter Course Code"
+                          hintText: "Enter Subject Name"
                       ),
                       onChanged: (inputValue)  {
+                        subjectName = inputValue;
                         setState(() => {subjectName = inputValue});
                       },
                     ),
                     SizedBox(height: 20.0,),
                     TextFormField(
                       decoration: InputDecoration(
-                          hintText: "Enter Course Code"
+                          hintText: "Enter Subject Note"
                       ),
                       onChanged: (inputValue)  {
-                        setState(() => {subjectName = inputValue});
+                        subjectNote = inputValue;
+                        setState(() => {subjectNote = inputValue});
                       },
                     ),
                     SizedBox(height: 20.0,),
