@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intelij/services/check_hall_availability.dart';
 import 'package:flutter_intelij/services/subject_collection_crud.dart';
 
 
@@ -141,13 +142,19 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                         ),
                         backgroundColor: MaterialStateProperty.all(Colors.cyan),
                       ),
-                      onPressed: () {
+                      onPressed: () async{
                         SubjectCRUDMethods crud = new SubjectCRUDMethods();
                         day = this.dropdownValue;
                         startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
                         endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
-                        crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
-                        Navigator.pop(context);
+                        CheckHallAvailability chab = new CheckHallAvailability();
+                        bool value = await chab.checkHallAvailability(day, location, newStartTime, newEndTime);
+                        if (value != true){
+                          crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
+                          Navigator.pop(context);
+                        } else {
+                          _showDialog();
+                        }
                       },
                       child: Text(
                         "Save",
@@ -197,6 +204,29 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
         newEndTime = selectedTime;
       });
     }
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("This Time Slot is not available"),
+          content: new Text("Try another one"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -334,12 +364,19 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
                       ),
                       backgroundColor: MaterialStateProperty.all(Colors.cyan),
                     ),
-                    onPressed: () {
+                    onPressed: () async{
                       SubjectCRUDMethods crud = new SubjectCRUDMethods();
                       startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
                       endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
-                      crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
-                      Navigator.pop(context);
+                      CheckHallAvailability chab = new CheckHallAvailability();
+                      bool value = await chab.checkHallAvailability(this.day, this.location, newStartTime, newEndTime);
+                      if (value != true){
+                        crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
+                        Navigator.pop(context);
+                      }
+                      else{
+                        _showDialog();
+                      }
                     },
                     child: Text(
                       "Save",
@@ -387,4 +424,28 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
       });
     }
   }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Alert Dialog title"),
+          content: new Text("Alert Dialog body"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+
