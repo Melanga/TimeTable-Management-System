@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_intelij/screens/subjectSelection/subject_selection.dart';
 
 class SettingsPanel extends StatefulWidget {
   @override
@@ -33,6 +34,12 @@ class _SettingsPanelState extends State<SettingsPanel> {
             itemBuilder: (BuildContext context, int index) {
               return GestureDetector(
                 onTap: (){
+                  if (index == 1){
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SubjectSelection())
+                    );
+                  }
                   setState(() {
                     selectedSetting = index;
                   });

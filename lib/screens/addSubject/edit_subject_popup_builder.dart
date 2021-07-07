@@ -10,7 +10,7 @@ import 'subjectTimeSlot/subject_timeslot_popup_builder.dart';
 
 class EditSubjectPopUpBuilder extends StatefulWidget {
   const EditSubjectPopUpBuilder(this.doc, {Key key}) : super(key: key);
-  final QueryDocumentSnapshot doc;
+  final DocumentSnapshot doc;
   @override
   _EditSubjectPopUpBuilderState createState() => _EditSubjectPopUpBuilderState();
 }

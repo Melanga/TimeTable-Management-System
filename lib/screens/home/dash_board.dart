@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/widget/subject_card_builder.dart';
-import 'package:flutter_intelij/screens/widget/week_days_bar.dart';
 import 'package:flutter_intelij/services/auth.dart';
 
 
@@ -14,6 +13,10 @@ class _DashBoardState extends State<DashBoard> {
   double screenHeight, screenWidth;
   final Duration duration = const Duration(milliseconds: 300);
   final AuthSevice _auth = AuthSevice();
+  int selectedDay = 0;
+  final List<String> weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  final List<String> weekDaysFirebase = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +69,38 @@ class _DashBoardState extends State<DashBoard> {
         ),
         body: Column(
           children: <Widget>[
-            WeekDaysBar(),
+            // Week Days bar
+            Container(
+              height: 60.0,
+              color: Color(0xFF003640),
+              child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: weekDays.length,
+                  itemBuilder: (BuildContext context, int index){
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedDay = index;
+                        });
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 13.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              weekDays[index],
+                              style: TextStyle(
+                                color: index == selectedDay ? Colors.white : Colors.white60,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
+            ),
             Expanded(
               child: GestureDetector(
                 onHorizontalDragUpdate: (DragUpdateDetails details){
@@ -85,9 +119,7 @@ class _DashBoardState extends State<DashBoard> {
                   ),
                   child: Container(
                     margin: EdgeInsets.only(left: 10.0, top: 10.0, right: 10.0),
-                    child: ListView(
-                      children: getSubjectWidgetList(),
-                    ),
+                    child: SubjectCardBuilder(weekDaysFirebase[selectedDay]),
                   )
                 ),
               ),
