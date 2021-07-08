@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/addSubject/edit_subject_popup_builder.dart';
+import 'package:flutter_intelij/services/daily_notification.dart';
 import 'package:flutter_intelij/services/get_selected_subjects.dart';
 import 'package:flutter_intelij/shared/hero_dialog_route.dart';
 
@@ -36,6 +37,10 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
 
     //List <String>subjectList = ["IIT 222-3", "CST 223-3"];
     _setSubjectList();
+    if(reverseSubjectMap.isNotEmpty && subjectList.isNotEmpty){
+      DailyNotification dailyNotification = new DailyNotification();
+      dailyNotification.setDailyNotifications(subjectList, reverseSubjectMap);
+    }
     Stream stream = FirebaseFirestore.instance.collection("SubjectTimeSlot").where('day', isEqualTo: widget.selectedDay).where('course_Code', whereIn: this.subjectList).snapshots();
 
     return StreamBuilder<QuerySnapshot>(
@@ -83,7 +88,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
                             Navigator.of(context).push(
                               HeroDialogRoute(
                                 builder: (context) => Center(
-                                    child: ShowSubjectPopUpBuilder(subject)
+                                    child: ShowSubjectPopUpBuilder(subject, doc)
                                 ),
                               ),
                             );
@@ -97,7 +102,17 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
               }).toList(),
             );
           } else {
-            return Text("no data");
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text("Loading Data...",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18
+                ),
+                textAlign: TextAlign.center,),
+              ],
+            );
           }
         }
     );
@@ -152,26 +167,68 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
 
 
 class ShowSubjectPopUpBuilder extends StatelessWidget {
-  const ShowSubjectPopUpBuilder(this.doc, {Key key}) : super(key: key);
+  const ShowSubjectPopUpBuilder(this.subject, this.timeslot, {Key key}) : super(key: key);
 
-  final DocumentSnapshot doc;
+  final DocumentSnapshot subject;
+  final QueryDocumentSnapshot timeslot;
   @override
   Widget build(BuildContext context) {
-    return Center(
-        child: Card(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Text(doc.data()["subject_Name"]),
-                  Text(doc.data()["subject_note"])
-                ],
+    TextStyle _textStyle = new TextStyle(
+      //fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    TextStyle _textLeadingStyle = new TextStyle(
+      fontWeight: FontWeight.bold,
+      fontSize: 16,
+    );
+    return Hero(
+      tag: timeslot.id,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: Card(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25)
+            ),
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 30, 20, 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      children: [
+                        Text(subject.data()["subject_Name"] + "  ", style: _textLeadingStyle),
+                        Text(subject.id, style: _textStyle),
+                      ],
+                    ),
+                    SizedBox(height: 30,),
+                    Row(
+                      children: [
+                        Text("Lecture Location : ", style: _textLeadingStyle,),
+                        Text(timeslot.data()["location"], style: _textStyle)
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      children: [
+                        Text("Duration : ", style: _textLeadingStyle,),
+                        Text(timeslot.data()["start_Time"] + " to " + timeslot.data()["end_Time"], style: _textStyle)
+                      ],
+                    ),
+                    SizedBox(height: 20,),
+                    Row(
+                      children: [
+                        Text("Subject Note : ", style: _textLeadingStyle,),
+                        Text(subject.data()["subject_note"], style: _textStyle)
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+      ),
     );
+
   }
 }

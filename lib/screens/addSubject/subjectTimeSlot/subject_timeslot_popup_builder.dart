@@ -149,11 +149,13 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                         endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
                         CheckHallAvailability chab = new CheckHallAvailability();
                         bool value = await chab.checkHallAvailability(day, location, newStartTime, newEndTime);
-                        if (value != true){
-                          crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
-                          Navigator.pop(context);
-                        } else {
-                          _showDialog();
+                        if(startTime.isNotEmpty && endTime.isNotEmpty && location.isNotEmpty && day.isNotEmpty){
+                          if (value != true){
+                            crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
+                            Navigator.pop(context);
+                          } else {
+                            _showDialog();
+                          }
                         }
                       },
                       child: Text(
@@ -370,12 +372,14 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
                       endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
                       CheckHallAvailability chab = new CheckHallAvailability();
                       bool value = await chab.checkHallAvailability(this.day, this.location, newStartTime, newEndTime);
-                      if (value != true){
-                        crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
-                        Navigator.pop(context);
-                      }
-                      else{
-                        _showDialog();
+                      if(startTime.isNotEmpty && endTime.isNotEmpty && location.isNotEmpty && day.isNotEmpty){
+                        if (value != true){
+                          crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
+                          Navigator.pop(context);
+                        }
+                        else{
+                          _showDialog();
+                        }
                       }
                     },
                     child: Text(
