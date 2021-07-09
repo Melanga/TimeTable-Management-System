@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/addSubject/subjectGroup/subject_group_builder.dart';
+import 'package:flutter_intelij/screens/addSubject/subjectTask/subject_task_builder.dart';
+import 'package:flutter_intelij/screens/addSubject/subjectTask/subject_task_popup_builder.dart';
 import 'package:flutter_intelij/screens/addSubject/subjectTimeSlot/subject_time_slot_builder.dart';
 import 'package:flutter_intelij/services/subject_collection_crud.dart';
 import 'package:flutter_intelij/shared/constant.dart';
@@ -29,7 +32,12 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
         padding: EdgeInsets.fromLTRB(0, 250, 0, 0),
         child: Card(
           shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(30),
+                topRight: Radius.circular(30),
+                bottomLeft: Radius.zero,
+                bottomRight: Radius.zero,
+              )
           ),
           child: SingleChildScrollView(
             child: Container(
@@ -93,6 +101,32 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                   ),
                   SizedBox(height: 20.0,),
                   SubjectGroupBuilder(subjectCode),
+                  SizedBox(height: 20.0,),
+                  Text("Subject Tasks", style: TextStyle(fontWeight: FontWeight.bold)),
+                  SubjectTaskBuilder(subjectCode),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    shadowColor: Colors.green,
+                    elevation: 4,
+                    child:Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: ListTile(
+                        onTap: (){
+                          Navigator.of(context).push(
+                            HeroDialogRoute(
+                              builder: (context) => Center(
+                                child: AddNewSubjectTask(subjectCode),
+                              ),
+                            ),
+                          );
+                        },
+                        title: Text("Add Subject Task"),
+                        trailing: Icon(Icons.add),
+                      ),
+                    ),
+                  ),
                   SizedBox(height: 20.0,),
                   Text("Add subject note", style: TextStyle(fontWeight: FontWeight.bold)),
                   TextFormField(

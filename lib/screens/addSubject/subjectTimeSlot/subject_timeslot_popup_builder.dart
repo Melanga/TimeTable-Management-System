@@ -166,6 +166,28 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                         ),
                       ),
                     ),
+                    TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            )
+                        ),
+                        backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                      ),
+                      onPressed: () async{
+                        SubjectCRUDMethods crud = new SubjectCRUDMethods();
+                        crud.deleteSubjectTimeSlotData(widget.doc.id);
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Delete",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
