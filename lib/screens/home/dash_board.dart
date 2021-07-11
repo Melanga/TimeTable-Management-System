@@ -13,7 +13,7 @@ class _DashBoardState extends State<DashBoard> {
   double screenHeight, screenWidth;
   final Duration duration = const Duration(milliseconds: 300);
   final AuthSevice _auth = AuthSevice();
-  int selectedDay = 0;
+  int selectedDay = (DateTime.now().weekday)-1;
   final List<String> weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   final List<String> weekDaysFirebase = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 

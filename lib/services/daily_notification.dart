@@ -17,6 +17,7 @@ class DailyNotification{
   List <String>weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   //List <String>weekDays = ["Monday"];
 
+  // This function set daily briefing notification
   Future<void> setDailyNotifications(List<String> subjectList, Map <String, String>subjectMap) async{
     QuerySnapshot data = await FirebaseFirestore.instance.collection('SubjectTimeSlot').where('course_Code', whereIn: subjectList).get();
     weekDays.forEach((day) {
@@ -42,6 +43,43 @@ class DailyNotification{
           uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
           androidAllowWhileIdle: true);*/
     });
+  }
+
+  Future<void> setTaskNotifications(List<String> subjectList, Map <String, String>subjectMap) async {
+    QuerySnapshot subjectTasks = await FirebaseFirestore.instance.collection('SubjectTask').where('course_Code', whereIn: subjectList).orderBy('course_Code', descending: true).get();
+    int notificationId = 100;
+    DateTime today = DateTime.now();
+    subjectTasks.docs.forEach((subjectTask) {
+      DateTime taskDate = DateTime.parse(subjectTask.data()['date']);
+      if(taskDate.isAfter(today)){
+        String notificationTitle = subjectMap[subjectTask.data()['course_Code']] + ": " + subjectTask.data()['title'] + " on " + subjectTask.data()['date'];
+        String notificationBody = subjectTask.data()['description'];
+        String time = subjectTask.data()['time'];
+        DateTime notificationDate = taskDate.add(Duration(
+            hours: int.parse(time.substring(0,2)),
+            minutes: int.parse(time.substring(6,7)))).subtract(Duration(days: 1));
+        _scheduleTaskNotification(notificationId, notificationTitle, notificationBody, notificationDate);
+        notificationId = notificationId + 1;
+      }
+    });
+  }
+
+
+  Future<void> _scheduleTaskNotification(int id, String notificationTitle, String notificationBody, DateTime date) async {
+    await notificationsPlugin.zonedSchedule(
+        id,
+        notificationTitle,
+        notificationBody,
+        tz.TZDateTime.from(date, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'task notification channel id',
+            'task notification channel name',
+            'task notification description'),
+        ),
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        androidAllowWhileIdle: true,
+        matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
   }
 
   // This method initialize the local notification package

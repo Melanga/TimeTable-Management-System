@@ -49,6 +49,7 @@ class _AddNewSubjectTaskState extends State<AddNewSubjectTask> {
                   decoration: InputDecoration(
                       hintText: "Enter Description"
                   ),
+                  maxLines: null,
                   onChanged: (inputValue)  {
                     description = inputValue;
                     setState(() => {description = inputValue});
@@ -209,6 +210,7 @@ class _EditSubjectTaskState extends State<EditSubjectTask> {
                 SizedBox(height: 20),
                 TextFormField(
                   initialValue: description,
+                  maxLines: null,
                   onChanged: (inputValue)  {
                     description = inputValue;
                     setState(() => {description = inputValue});

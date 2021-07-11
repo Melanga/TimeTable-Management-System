@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/addSubject/edit_subject_popup_builder.dart';
+import 'package:flutter_intelij/screens/addSubject/subjectTask/subject_task_builder.dart';
 import 'package:flutter_intelij/services/daily_notification.dart';
 import 'package:flutter_intelij/services/get_selected_subjects.dart';
 import 'package:flutter_intelij/shared/hero_dialog_route.dart';
@@ -40,6 +42,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     if(reverseSubjectMap.isNotEmpty && subjectList.isNotEmpty){
       DailyNotification dailyNotification = new DailyNotification();
       dailyNotification.setDailyNotifications(subjectList, reverseSubjectMap);
+      dailyNotification.setTaskNotifications(subjectList, reverseSubjectMap);
     }
     Stream stream = FirebaseFirestore.instance.collection("SubjectTimeSlot").where('day', isEqualTo: widget.selectedDay).where('course_Code', whereIn: this.subjectList).snapshots();
 
@@ -166,13 +169,30 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
 }
 
 
-class ShowSubjectPopUpBuilder extends StatelessWidget {
+class ShowSubjectPopUpBuilder extends StatefulWidget {
   const ShowSubjectPopUpBuilder(this.subject, this.timeslot, {Key key}) : super(key: key);
 
   final DocumentSnapshot subject;
   final QueryDocumentSnapshot timeslot;
+
+  @override
+  _ShowSubjectPopUpBuilderState createState() => _ShowSubjectPopUpBuilderState();
+}
+
+class _ShowSubjectPopUpBuilderState extends State<ShowSubjectPopUpBuilder> {
+  String subjectID = "";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      subjectID = widget.subject.id;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    Stream data = FirebaseFirestore.instance.collection("SubjectTask").where('course_Code', isEqualTo: subjectID).snapshots();
     TextStyle _textStyle = new TextStyle(
       //fontWeight: FontWeight.bold,
       fontSize: 16,
@@ -182,7 +202,7 @@ class ShowSubjectPopUpBuilder extends StatelessWidget {
       fontSize: 16,
     );
     return Hero(
-      tag: timeslot.id,
+      tag: widget.timeslot.id,
       child: Padding(
         padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
           child: Card(
@@ -197,31 +217,32 @@ class ShowSubjectPopUpBuilder extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Text(subject.data()["subject_Name"] + "  ", style: _textLeadingStyle),
-                        Text(subject.id, style: _textStyle),
+                        Text(widget.subject.data()["subject_Name"] + "  ", style: _textLeadingStyle),
+                        Text(widget.subject.id, style: _textStyle),
                       ],
                     ),
                     SizedBox(height: 30,),
                     Row(
                       children: [
                         Text("Lecture Location : ", style: _textLeadingStyle,),
-                        Text(timeslot.data()["location"], style: _textStyle)
+                        Text(widget.timeslot.data()["location"], style: _textStyle)
                       ],
                     ),
                     SizedBox(height: 20,),
                     Row(
                       children: [
                         Text("Duration : ", style: _textLeadingStyle,),
-                        Text(timeslot.data()["start_Time"] + " to " + timeslot.data()["end_Time"], style: _textStyle)
+                        Text(widget.timeslot.data()["start_Time"] + " to " + widget.timeslot.data()["end_Time"], style: _textStyle)
                       ],
                     ),
                     SizedBox(height: 20,),
                     Row(
                       children: [
                         Text("Subject Note : ", style: _textLeadingStyle,),
-                        Text(subject.data()["subject_note"], style: _textStyle)
+                        Text(widget.subject.data()["subject_note"], style: _textStyle)
                       ],
                     ),
+                    ShowSubjectTaskBuilder(subjectID),
                   ],
                 ),
               ),
@@ -230,5 +251,56 @@ class ShowSubjectPopUpBuilder extends StatelessWidget {
       ),
     );
 
+  }
+}
+
+class ShowSubjectTaskBuilder extends StatefulWidget {
+  const ShowSubjectTaskBuilder(this.subjectCode, {Key key}) : super(key: key);
+
+  final String subjectCode;
+  @override
+  _ShowSubjectTaskBuilderState createState() => _ShowSubjectTaskBuilderState();
+}
+
+class _ShowSubjectTaskBuilderState extends State<ShowSubjectTaskBuilder> {
+  @override
+  Widget build(BuildContext context) {
+
+    Stream data = FirebaseFirestore.instance.collection("SubjectTask").where('course_Code', isEqualTo: widget.subjectCode).snapshots();
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: data,
+      builder: (context, snapshot){
+        if(snapshot.hasData){
+          return ListView(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            children: snapshot.data.docs.map((doc) {
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                color: Colors.white70,
+                shadowColor: Colors.redAccent,
+                child: ListTile(
+                  title: Text(doc.data()['title']),
+                  subtitle: Text(doc.data()['description']),
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(doc.data()['date']),
+                      Text(doc.data()['time']),
+                    ],
+                  ),
+                  onTap: (){},
+                ),
+              );
+            }).toList(),
+          );
+        } else {
+          return Text("Loading");
+        }
+      },
+    );
   }
 }
