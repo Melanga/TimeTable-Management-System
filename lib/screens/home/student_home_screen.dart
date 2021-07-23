@@ -56,6 +56,11 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         elevation: 0.0,
       ),
       drawer: SettingsPanel(),
+      onDrawerChanged: (isOpen) {
+        if(!isOpen){
+          setState(() => {});
+        }
+      },
       body: Column(
         children: <Widget>[
           // Week Days bar

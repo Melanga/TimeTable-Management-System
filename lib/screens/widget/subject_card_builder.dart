@@ -36,7 +36,6 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     _getSubjectMap();
     _getSubjectList();
     _categorizeUser();
-    _setIsNotificationOn();
   }
 
   @override
@@ -45,7 +44,6 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     super.didUpdateWidget(oldWidget);
     _getSubjectMap();
     _getSubjectList();
-    _setIsNotificationOn();
   }
 
   @override
@@ -58,11 +56,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     }*/
     if(reverseSubjectMap.isNotEmpty && subjectList.isNotEmpty){
       DailyNotification dailyNotification = new DailyNotification();
-      if(this.isNotificationOn){
-        dailyNotification.setDailyNotifications(subjectList, reverseSubjectMap);
-      }else {
-        dailyNotification.cancelDailyNotifications();
-      }
+      dailyNotification.setDailyNotifications(subjectList, reverseSubjectMap);
       dailyNotification.setTaskNotifications(subjectList, reverseSubjectMap);
     }
     Stream stream = FirebaseFirestore.instance.collection("SubjectTimeSlot").where('day', isEqualTo: widget.selectedDay).where('course_Code', whereIn: this.subjectList).snapshots();
@@ -189,18 +183,6 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     });
   }
 
-  _setIsNotificationOn() async{
-    final prefs = await SharedPreferences.getInstance();
-    bool value = true;
-    try {
-      value = prefs.getBool("isNotificationOn");
-    } catch (e){
-      value = true;
-    }
-    setState(() {
-      this.isNotificationOn = value;
-    });
-  }
 }
 
 

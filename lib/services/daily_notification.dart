@@ -30,6 +30,12 @@ class DailyNotification{
           hour: int.parse(timeString.substring(0,2)),
           minute: int.parse(timeString.substring(5,7)));
     }
+    bool isNotificationOn = true;
+    try {
+      isNotificationOn = prefs.getBool("isNotificationOn");
+    } catch (e){
+      isNotificationOn = true;
+    }
     weekDays.forEach((day) {
       String notificationTitle = "Your " + day + " Subjects:";
       //var notificationTime = tz.TZDateTime.now(tz.local).add(Duration(seconds: 5));
@@ -41,7 +47,11 @@ class DailyNotification{
               " in " + timeSlot.data()['location'] +"////";
         }
       });
-      _scheduleWeeklyNotification(dayList[day], notificationTitle, notificationBody, initTime);
+      if(isNotificationOn){
+        _scheduleWeeklyNotification(dayList[day], notificationTitle, notificationBody, initTime);
+      } else {
+        cancelDailyNotifications();
+      }
       /*notificationsPlugin.zonedSchedule(
           0,
           notificationTitle,
