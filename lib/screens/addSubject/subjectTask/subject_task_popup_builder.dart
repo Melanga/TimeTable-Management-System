@@ -182,7 +182,7 @@ class _EditSubjectTaskState extends State<EditSubjectTask> {
       selectedDate = DateTime.parse(date);
       selectedTime = TimeOfDay(
           hour: int.parse(time.substring(0,2)),
-          minute: int.parse(time.substring(6,7)));
+          minute: int.parse(time.substring(5,7)));
     });
   }
 

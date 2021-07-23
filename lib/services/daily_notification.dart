@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -20,6 +22,14 @@ class DailyNotification{
   // This function set daily briefing notification
   Future<void> setDailyNotifications(List<String> subjectList, Map <String, String>subjectMap) async{
     QuerySnapshot data = await FirebaseFirestore.instance.collection('SubjectTimeSlot').where('course_Code', whereIn: subjectList).get();
+    final prefs = await SharedPreferences.getInstance();
+    TimeOfDay initTime = new TimeOfDay(hour: 7, minute: 0);
+    String timeString = prefs.getString("isNotificationTime");
+    if (timeString.isNotEmpty){
+      initTime = TimeOfDay(
+          hour: int.parse(timeString.substring(0,2)),
+          minute: int.parse(timeString.substring(5,7)));
+    }
     weekDays.forEach((day) {
       String notificationTitle = "Your " + day + " Subjects:";
       //var notificationTime = tz.TZDateTime.now(tz.local).add(Duration(seconds: 5));
@@ -31,7 +41,7 @@ class DailyNotification{
               " in " + timeSlot.data()['location'] +"////";
         }
       });
-      _scheduleWeeklyNotification(dayList[day], notificationTitle, notificationBody);
+      _scheduleWeeklyNotification(dayList[day], notificationTitle, notificationBody, initTime);
       /*notificationsPlugin.zonedSchedule(
           0,
           notificationTitle,
@@ -43,6 +53,13 @@ class DailyNotification{
           uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
           androidAllowWhileIdle: true);*/
     });
+  }
+
+  Future<void> cancelDailyNotifications() async{
+    dayList.values.forEach((element) async{
+      await notificationsPlugin.cancel(element);
+    });
+    print("Notifications Were Cancelled");
   }
 
   Future<void> setTaskNotifications(List<String> subjectList, Map <String, String>subjectMap) async {
@@ -96,12 +113,12 @@ class DailyNotification{
     notificationsPlugin.initialize(initializeSettings);
   }
 
-  Future<void> _scheduleWeeklyNotification(int day, String notificationTitle, String notificationBody) async {
+  Future<void> _scheduleWeeklyNotification(int day, String notificationTitle, String notificationBody, time) async {
     await notificationsPlugin.zonedSchedule(
         day,
         notificationTitle,
         notificationBody,
-        _nextInstanceOfWeek(day),
+        _nextInstanceOfWeek(day, time),
         const NotificationDetails(
           android: AndroidNotificationDetails(
               'weekly notification channel id',
@@ -114,22 +131,23 @@ class DailyNotification{
         matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime);
   }
 
-  tz.TZDateTime _nextInstanceOfWeek(day) {
-    tz.TZDateTime scheduledDate = _nextInstanceOfTenAM();
+  tz.TZDateTime _nextInstanceOfWeek(day, time) {
+    tz.TZDateTime scheduledDate = _nextInstanceOfTenAM(time);
     while (scheduledDate.weekday != day) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
     return scheduledDate;
   }
 
-  tz.TZDateTime _nextInstanceOfTenAM() {
+  tz.TZDateTime _nextInstanceOfTenAM(TimeOfDay time) {
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
+    print("Notifications Were set at " + time.toString());
     tz.TZDateTime scheduledDate =
-    tz.TZDateTime(tz.local, now.year, now.month, now.day, 10);
+    tz.TZDateTime(tz.local, now.year, now.month, now.day, time.hour, time.minute, 0,0,0);
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-    return now;
+    return scheduledDate;
   }
 
 }

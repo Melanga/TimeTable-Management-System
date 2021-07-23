@@ -7,6 +7,8 @@ import 'package:flutter_intelij/screens/addSubject/subjectTask/subject_task_buil
 import 'package:flutter_intelij/services/daily_notification.dart';
 import 'package:flutter_intelij/services/get_selected_subjects.dart';
 import 'package:flutter_intelij/shared/hero_dialog_route.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 class SubjectCardBuilder extends StatefulWidget {
@@ -24,6 +26,8 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
   Map <String, String>subjectMap = {};
   Map <String, String>reverseSubjectMap = {};
   String userCategory = '';
+  TimeOfDay initTime = new TimeOfDay(hour: 7, minute: 0);
+  bool isNotificationOn = true;
 
   @override
   void initState() {
@@ -32,16 +36,33 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     _getSubjectMap();
     _getSubjectList();
     _categorizeUser();
+    _setIsNotificationOn();
+  }
+
+  @override
+  void didUpdateWidget(covariant SubjectCardBuilder oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    _getSubjectMap();
+    _getSubjectList();
+    _setIsNotificationOn();
   }
 
   @override
   Widget build(BuildContext context) {
 
     //List <String>subjectList = ["IIT 222-3", "CST 223-3"];
-    _setSubjectList();
+    /*if(subjectMap.isNotEmpty){
+      _setSubjectList();
+
+    }*/
     if(reverseSubjectMap.isNotEmpty && subjectList.isNotEmpty){
       DailyNotification dailyNotification = new DailyNotification();
-      dailyNotification.setDailyNotifications(subjectList, reverseSubjectMap);
+      if(this.isNotificationOn){
+        dailyNotification.setDailyNotifications(subjectList, reverseSubjectMap);
+      }else {
+        dailyNotification.cancelDailyNotifications();
+      }
       dailyNotification.setTaskNotifications(subjectList, reverseSubjectMap);
     }
     Stream stream = FirebaseFirestore.instance.collection("SubjectTimeSlot").where('day', isEqualTo: widget.selectedDay).where('course_Code', whereIn: this.subjectList).snapshots();
@@ -64,7 +85,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
                         contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                         title: Row(
                           children: [
-                            Text(reverseSubjectMap[doc.data()['course_Code']]),
+                            Text(reverseSubjectMap[doc.data()['course_Code']]??"loading"),
                             Text("  (${doc.data()['course_Code']})")
                           ],
                         ),
@@ -121,6 +142,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     );
   }
 
+
   _categorizeUser(){
     final userEmail = FirebaseAuth.instance.currentUser.email;
     if(userEmail.endsWith("@uwu.ac.lk")){
@@ -136,7 +158,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     List <String>returnSubject = [];
     await _getSubjectMap();
     selectedSubjects.forEach((element) {
-      returnSubject.add(this.subjectMap[element]);
+      returnSubject.add(this.subjectMap[element]??"empty");
     });
     setState(() {
       this.subjectList = returnSubject;
@@ -148,7 +170,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     List<String>selectedSubjects = await getSelectedSubjects.getSelectedSubjectList();
     List <String>returnSubject = [];
     selectedSubjects.forEach((element) {
-      returnSubject.add(this.subjectMap[element]);
+        returnSubject.add(this.subjectMap[element]??"empty");
     });
     this.subjectList = returnSubject;
   }
@@ -164,6 +186,19 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
     setState(() {
       this.reverseSubjectMap = reverseSubjectMap;
       this.subjectMap = subjectMap;
+    });
+  }
+
+  _setIsNotificationOn() async{
+    final prefs = await SharedPreferences.getInstance();
+    bool value = true;
+    try {
+      value = prefs.getBool("isNotificationOn");
+    } catch (e){
+      value = true;
+    }
+    setState(() {
+      this.isNotificationOn = value;
     });
   }
 }

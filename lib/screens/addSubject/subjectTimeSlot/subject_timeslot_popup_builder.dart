@@ -25,10 +25,10 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
     super.initState();
     newStartTime = TimeOfDay(
         hour: int.parse(widget.doc.data()['start_Time'].toString().substring(0,2)),
-        minute: int.parse(widget.doc.data()['start_Time'].toString().substring(6,7)));
+        minute: int.parse(widget.doc.data()['start_Time'].toString().substring(5,7)));
     newEndTime = TimeOfDay(
         hour: int.parse(widget.doc.data()['end_Time'].toString().substring(0,2)),
-        minute: int.parse(widget.doc.data()['end_Time'].toString().substring(6,7)));
+        minute: int.parse(widget.doc.data()['end_Time'].toString().substring(5,7)));
     dropdownValue = widget.doc.data()['day'];
   }
 
