@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intelij/services/check_hall_availability.dart';
 import 'package:flutter_intelij/services/subject_collection_crud.dart';
 
 
@@ -24,10 +25,10 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
     super.initState();
     newStartTime = TimeOfDay(
         hour: int.parse(widget.doc.data()['start_Time'].toString().substring(0,2)),
-        minute: int.parse(widget.doc.data()['start_Time'].toString().substring(6,7)));
+        minute: int.parse(widget.doc.data()['start_Time'].toString().substring(5,7)));
     newEndTime = TimeOfDay(
         hour: int.parse(widget.doc.data()['end_Time'].toString().substring(0,2)),
-        minute: int.parse(widget.doc.data()['end_Time'].toString().substring(6,7)));
+        minute: int.parse(widget.doc.data()['end_Time'].toString().substring(5,7)));
     dropdownValue = widget.doc.data()['day'];
   }
 
@@ -141,15 +142,46 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                         ),
                         backgroundColor: MaterialStateProperty.all(Colors.cyan),
                       ),
-                      onPressed: () {
+                      onPressed: () async{
                         SubjectCRUDMethods crud = new SubjectCRUDMethods();
                         day = this.dropdownValue;
                         startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
                         endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
-                        crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
+                        CheckHallAvailability chab = new CheckHallAvailability();
+                        bool value = await chab.checkHallAvailability(day, location, newStartTime, newEndTime);
+                        if(startTime.isNotEmpty && endTime.isNotEmpty && location.isNotEmpty && day.isNotEmpty){
+                          if (value != true){
+                            crud.editSubjectTimeSlotData(widget.subjectCode, timeSlotId, startTime, day, endTime, location);
+                            Navigator.pop(context);
+                          } else {
+                            _showDialog();
+                          }
+                        }
                       },
                       child: Text(
                         "Save",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                            )
+                        ),
+                        backgroundColor: MaterialStateProperty.all(Colors.redAccent),
+                      ),
+                      onPressed: () async{
+                        SubjectCRUDMethods crud = new SubjectCRUDMethods();
+                        crud.deleteSubjectTimeSlotData(widget.doc.id);
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Delete",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 20,
@@ -196,6 +228,29 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
         newEndTime = selectedTime;
       });
     }
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("This Time Slot is not available"),
+          content: new Text("Try another one"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -333,11 +388,21 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
                       ),
                       backgroundColor: MaterialStateProperty.all(Colors.cyan),
                     ),
-                    onPressed: () {
+                    onPressed: () async{
                       SubjectCRUDMethods crud = new SubjectCRUDMethods();
                       startTime = "${newStartTime.hour.toString().padLeft(2, "0")} : ${newStartTime.minute.toString().padLeft(2, "0")}";
                       endTime = "${newEndTime.hour.toString().padLeft(2, "0")} : ${newEndTime.minute.toString().padLeft(2, "0")}";
-                      crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
+                      CheckHallAvailability chab = new CheckHallAvailability();
+                      bool value = await chab.checkHallAvailability(this.day, this.location, newStartTime, newEndTime);
+                      if(startTime.isNotEmpty && endTime.isNotEmpty && location.isNotEmpty && day.isNotEmpty){
+                        if (value != true){
+                          crud.addSubjectTimeSlotData(widget.subjectCode, this.startTime, this.day, this.endTime, this.location);
+                          Navigator.pop(context);
+                        }
+                        else{
+                          _showDialog();
+                        }
+                      }
                     },
                     child: Text(
                       "Save",
@@ -385,4 +450,28 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
       });
     }
   }
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("This Time Slot is not available"),
+          content: new Text("Try another one"),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
+

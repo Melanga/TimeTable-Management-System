@@ -17,7 +17,7 @@ class AdminSubjectCardBuilder{
                   padding: EdgeInsets.zero,
                   child: Card(
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(35)
+                        borderRadius: BorderRadius.circular(25)
                     ),
                     child: ListTile(
                       contentPadding: EdgeInsets.fromLTRB(20, 7, 20, 7),

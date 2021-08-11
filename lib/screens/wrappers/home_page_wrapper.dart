@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/home/admin_panel_widget.dart';
 import 'package:flutter_intelij/screens/home/home_screen.dart';
-import 'package:flutter_intelij/screens/home/admin_home_page.dart';
 
 // either return QR Code or Scanner using the data of scan option.
 

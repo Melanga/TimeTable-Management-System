@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/models/app_user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthSevice {
 
@@ -68,6 +69,8 @@ class AuthSevice {
   // sign out
   Future signOut() async{
     try {
+      final prefs = await SharedPreferences.getInstance();
+      prefs.remove('selectedSubjects');
       return await _auth.signOut();
     } catch(e){
       print(e.toString());
