@@ -47,66 +47,76 @@ class _SubjectSelectionState extends State<SubjectSelection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF003640),
         title: Text("Subject Selection"),
       ),
-      body: Padding(
-        padding: EdgeInsets.all(10),
-        child: StreamBuilder<QuerySnapshot>(
-          stream: subjects,
-          builder: (context, snapshot){
-            if(snapshot.hasData){
-              return ListView(
-                children: snapshot.data.docs.map((subjectData) {
-                  if(userCategory == "lecturer"){
-                    if (savedSelectedSubjects.isNotEmpty){
-                      values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']]);
-                    } else {
-                      values.putIfAbsent(subjectData.data()['subject_Name'], () => false);
-                    }
-                    return Card(
-                      child: CheckboxListTile(
-                          title: Text(subjectData.data()['subject_Name']),
-                          controlAffinity: ListTileControlAffinity.trailing,
-                          value: values[subjectData.data()['subject_Name']],
-                          onChanged: (value){
-                            setState(() {
-                              values[subjectData.data()['subject_Name']] = value;
-                            });
-                            //print(values);
-                            _setSelectedSubjects();
-                          }),
+      body: Column(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.teal,
+              ),
+              padding: EdgeInsets.all(10),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: subjects,
+                builder: (context, snapshot){
+                  if(snapshot.hasData){
+                    return ListView(
+                      children: snapshot.data.docs.map((subjectData) {
+                        if(userCategory == "lecturer"){
+                          if (savedSelectedSubjects.isNotEmpty){
+                            values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']]);
+                          } else {
+                            values.putIfAbsent(subjectData.data()['subject_Name'], () => false);
+                          }
+                          return Card(
+                            child: CheckboxListTile(
+                                title: Text(subjectData.data()['subject_Name']),
+                                controlAffinity: ListTileControlAffinity.trailing,
+                                value: values[subjectData.data()['subject_Name']],
+                                onChanged: (value){
+                                  setState(() {
+                                    values[subjectData.data()['subject_Name']] = value;
+                                  });
+                                  //print(values);
+                                  _setSelectedSubjects();
+                                }),
+                          );
+                        } else {
+                          if(subjectShowList.contains(subjectData.id)) {
+                            if (savedSelectedSubjects.isNotEmpty){
+                              values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']]);
+                            } else {
+                              values.putIfAbsent(subjectData.data()['subject_Name'], () => false);
+                            }
+                            return Card(
+                              child: CheckboxListTile(
+                                  title: Text(subjectData.data()['subject_Name']),
+                                  controlAffinity: ListTileControlAffinity.trailing,
+                                  value: values[subjectData.data()['subject_Name']],
+                                  onChanged: (value){
+                                    setState(() {
+                                      values[subjectData.data()['subject_Name']] = value;
+                                    });
+                                    //print(values);
+                                    _setSelectedSubjects();
+                                  }),
+                            );
+                          } else {
+                            return Text ("");
+                          }
+                        }
+                      }).toList(),
                     );
-                  } else {
-                    if(subjectShowList.contains(subjectData.id)) {
-                      if (savedSelectedSubjects.isNotEmpty){
-                        values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']]);
-                      } else {
-                        values.putIfAbsent(subjectData.data()['subject_Name'], () => false);
-                      }
-                      return Card(
-                        child: CheckboxListTile(
-                            title: Text(subjectData.data()['subject_Name']),
-                            controlAffinity: ListTileControlAffinity.trailing,
-                            value: values[subjectData.data()['subject_Name']],
-                            onChanged: (value){
-                              setState(() {
-                                values[subjectData.data()['subject_Name']] = value;
-                              });
-                              //print(values);
-                              _setSelectedSubjects();
-                            }),
-                      );
-                    } else {
-                      return Text ("");
-                    }
+                  } else{
+                    return Text("Loading");
                   }
-                }).toList(),
-              );
-            } else{
-              return Text("Loading");
-            }
-          },
-        ),
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

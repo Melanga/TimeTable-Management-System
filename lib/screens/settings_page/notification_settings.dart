@@ -26,33 +26,48 @@ class _NotificationSettingsState extends State<NotificationSettings> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Color(0xFF003640),
         title: Text("Notification"),
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+          color: Colors.teal,
+        ),
         padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            ListTile(
-              title: Text("Daily Brief Notification"),
-              subtitle: Text("This include your daily subjects, time, location and subject note"),
-              trailing: Switch(
-                value: this.isNotificationOn,
-                onChanged: (value){
-                  setState(() {
-                    this.isNotificationOn = value;
-                  });
-                  _setIsNotificationOn(value);
-                },
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)
+              ),
+              child: ListTile(
+                contentPadding: EdgeInsets.fromLTRB(20, 10, 10, 10),
+                title: Text("Daily Brief Notification"),
+                subtitle: Text("This include your daily subjects, time, location and subject note"),
+                trailing: Switch(
+                  value: this.isNotificationOn,
+                  onChanged: (value){
+                    setState(() {
+                      this.isNotificationOn = value;
+                    });
+                    _setIsNotificationOn(value);
+                  },
+                ),
               ),
             ),
             SizedBox(height: 20),
-            ListTile(
-              title: Text("Notification Time"),
-              trailing: Text("${initTime.hour.toString().padLeft(2, "0")} : ${initTime.minute.toString().padLeft(2, "0")}"),
-              onTap: ()async{
-                await _pickTime();
-              },
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)
+              ),
+              child: ListTile(
+                title: Text("Notification Time"),
+                trailing: Text("${initTime.hour.toString().padLeft(2, "0")} : ${initTime.minute.toString().padLeft(2, "0")}"),
+                onTap: ()async{
+                  await _pickTime();
+                },
+              ),
             )
           ],
         ),

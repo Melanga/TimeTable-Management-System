@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/home/student_settings_plane.dart';
 import 'package:flutter_intelij/screens/widget/subject_card_builder.dart';
@@ -17,7 +18,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   final List<String> weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
   final List<String> weekDaysFirebase = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  String userCategory = "";
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _categorizeUser();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -55,7 +63,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         centerTitle: true,
         elevation: 0.0,
       ),
-      drawer: SettingsPanel(),
+      drawer: SettingsPanel(this.userCategory),
       onDrawerChanged: (isOpen) {
         if(!isOpen){
           setState(() => {});
@@ -113,5 +121,14 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         ],
       ),
     );
+  }
+
+  _categorizeUser(){
+    final userEmail = FirebaseAuth.instance.currentUser.email;
+    if(userEmail.endsWith("@uwu.ac.lk")){
+      setState(() => {this.userCategory = "lecturer"});
+    } else if (userEmail.endsWith("@example.com")){
+      setState(() => {this.userCategory = "student"});
+    }
   }
 }

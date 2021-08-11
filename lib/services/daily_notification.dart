@@ -84,7 +84,7 @@ class DailyNotification{
         String time = subjectTask.data()['time'];
         DateTime notificationDate = taskDate.add(Duration(
             hours: int.parse(time.substring(0,2)),
-            minutes: int.parse(time.substring(6,7)))).subtract(Duration(days: 1));
+            minutes: int.parse(time.substring(5,7)))).subtract(Duration(days: 1));
         _scheduleTaskNotification(notificationId, notificationTitle, notificationBody, notificationDate);
         notificationId = notificationId + 1;
       }

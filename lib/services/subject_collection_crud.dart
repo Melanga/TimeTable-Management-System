@@ -109,4 +109,88 @@ class SubjectCRUDMethods {
     subjectTask.doc(docId).delete().then((value) => print('deleted')).
     catchError((e) => {print(e)});
   }
+
+  Future<void> addSeminarData(userId, seminarName, seminarDescription) async{
+    CollectionReference seminars = FirebaseFirestore.instance.collection('Seminar');
+    seminars.add({
+      'seminar_Name': seminarName,
+      'seminar_Description': seminarDescription,
+      'lecturer_ID' : userId,
+    }).then((value) => print('Added')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> deleteSeminarData(seminarId) async{
+    CollectionReference seminars = FirebaseFirestore.instance.collection('Seminar');
+    CollectionReference seminarGroups = FirebaseFirestore.instance.collection('SeminarGroup');
+    CollectionReference seminarTimeSlots = FirebaseFirestore.instance.collection('SeminarTimeSlot');
+    QuerySnapshot seminarGroup = await seminarGroups.where('seminar_Id', isEqualTo: seminarId).get();
+    seminarGroup.docs.forEach((doc1) {
+      seminarGroups.doc(doc1.id).delete().then((value) => print('Deleted')).
+      catchError((e) => {print(e)});
+    });
+    QuerySnapshot seminarTimeSlot = await seminarTimeSlots.where('seminar_Id', isEqualTo: seminarId).get();
+    seminarTimeSlot.docs.forEach((doc2) {
+      seminarTimeSlots.doc(doc2.id).delete().then((value) => print('Deleted')).
+      catchError((e) => {print(e)});
+    });
+    seminars.doc(seminarId).delete().then((value) => print('Deleted')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> editSeminarData(seminarId, userId, seminarName, seminarDescription) async{
+    CollectionReference subjects = FirebaseFirestore.instance.collection('Seminar');
+    subjects.doc(seminarId).set({
+      'seminar_Name': seminarName,
+      'seminar_Description': seminarDescription,
+      'lecturer_ID' : userId,
+    }).then((value) => print('Added')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> addSeminarTimeSlotData(seminarId, date, startTime, endTime, location) async{
+    CollectionReference seminarTimeSlots = FirebaseFirestore.instance.collection('SeminarTimeSlot');
+    seminarTimeSlots.add({
+      'seminar_Id': seminarId,
+      'date': date,
+      'start_Time': startTime,
+      'end_Time': endTime,
+      'location': location,
+    }).then((value) => print('Added')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> editSeminarTimeSlotData(seminarTimeSlotId, seminarId, date, startTime, endTime, location) async{
+    CollectionReference subjectTask = FirebaseFirestore.instance.collection('SeminarTimeSlot');
+    subjectTask.doc(seminarTimeSlotId).set({
+      'seminar_Id': seminarId,
+      'date': date,
+      'start_Time': startTime,
+      'end_Time': endTime,
+      'location': location,
+    }).then((value) => print('Added')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> deleteSeminarTimeSlotData(docId) async{
+    CollectionReference subjectTask = FirebaseFirestore.instance.collection('SeminarTimeSlot');
+    subjectTask.doc(docId).delete().then((value) => print('deleted')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> addSeminarGroupData(seminarId, degree, year) async{
+    CollectionReference subjectGroup = FirebaseFirestore.instance.collection('SeminarGroup');
+    subjectGroup.add({
+      'seminar_Id': seminarId,
+      'degree': degree,
+      'year': year
+    }).then((value) => print('Added')).
+    catchError((e) => {print(e)});
+  }
+
+  Future<void> deleteSeminarGroupData(docId) async{
+    CollectionReference subjectGroup = FirebaseFirestore.instance.collection('SeminarGroup');
+    subjectGroup.doc(docId).delete().then((value) => print('deleted')).
+    catchError((e) => {print(e)});
+  }
 }

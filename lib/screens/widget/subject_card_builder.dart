@@ -33,7 +33,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getSubjectMap();
+    //_getSubjectMap();
     _getSubjectList();
     _categorizeUser();
   }
@@ -42,7 +42,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
   void didUpdateWidget(covariant SubjectCardBuilder oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-    _getSubjectMap();
+    //_getSubjectMap();
     _getSubjectList();
   }
 
@@ -209,7 +209,6 @@ class _ShowSubjectPopUpBuilderState extends State<ShowSubjectPopUpBuilder> {
 
   @override
   Widget build(BuildContext context) {
-    Stream data = FirebaseFirestore.instance.collection("SubjectTask").where('course_Code', isEqualTo: subjectID).snapshots();
     TextStyle _textStyle = new TextStyle(
       //fontWeight: FontWeight.bold,
       fontSize: 16,

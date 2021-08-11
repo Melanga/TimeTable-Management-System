@@ -1,21 +1,28 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/services/subject_collection_crud.dart';
 
 
-class AddNewSubjectPopUp extends StatefulWidget {
-  const AddNewSubjectPopUp({Key key}) : super(key: key);
+class AddNewSeminarPopUp extends StatefulWidget {
+  const AddNewSeminarPopUp({Key key}) : super(key: key);
 
   @override
-  _AddNewSubjectPopUpState createState() => _AddNewSubjectPopUpState();
+  _AddNewSeminarPopUpState createState() => _AddNewSeminarPopUpState();
 }
 
-class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
+class _AddNewSeminarPopUpState extends State<AddNewSeminarPopUp> {
 
   String heroId = "subjectPopUp";
-  String subjectCode;
-  String subjectName;
-  String subjectNote = "Empty";
+  String seminarName;
+  String seminarDescription = "Empty";
+  String userId = "";
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getUserID();
+  }
   @override
   Widget build(BuildContext context) {
     return Hero(
@@ -37,31 +44,22 @@ class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
                   children: [
                     TextFormField(
                       decoration: InputDecoration(
-                        hintText: "Enter Course Code"
+                          hintText: "Enter Seminar Name"
                       ),
                       onChanged: (inputValue)  {
-                        subjectCode = inputValue;
-                        setState(() => {subjectCode = inputValue});
+                        this.seminarName = inputValue;
+                        setState(() => {this.seminarName = inputValue});
                       },
                     ),
                     SizedBox(height: 20),
                     TextFormField(
+                      maxLines: null,
                       decoration: InputDecoration(
-                          hintText: "Enter Subject Name"
+                          hintText: "Enter Seminar Description"
                       ),
                       onChanged: (inputValue)  {
-                        subjectName = inputValue;
-                        setState(() => {subjectName = inputValue});
-                      },
-                    ),
-                    SizedBox(height: 20.0,),
-                    TextFormField(
-                      decoration: InputDecoration(
-                          hintText: "Enter Subject Note"
-                      ),
-                      onChanged: (inputValue)  {
-                        subjectNote = inputValue;
-                        setState(() => {subjectNote = inputValue});
+                        this.seminarDescription = inputValue;
+                        setState(() => {this.seminarDescription = inputValue});
                       },
                     ),
                     SizedBox(height: 20.0,),
@@ -76,8 +74,8 @@ class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
                       ),
                       onPressed: () {
                         SubjectCRUDMethods crud = new SubjectCRUDMethods();
-                        if(subjectCode.isNotEmpty){
-                          crud.addSubjectData(this.subjectCode, this.subjectName, this.subjectNote);
+                        if(this.seminarName.isNotEmpty){
+                          crud.addSeminarData(this.userId, this.seminarName, this.seminarDescription);
                           Navigator.pop(context);
                         }
                       },
@@ -98,31 +96,11 @@ class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
       ),
     );
   }
-}
 
-
-/*_pickStartDate() async {
-    DateTime selectedDate = await showDatePicker(
-        context: context,
-        initialDate: startDate,
-        firstDate: DateTime(DateTime.now().year -2),
-        lastDate: DateTime(DateTime.now().year +2));
-    if(selectedDate != null){
-      setState(() {
-        startDate = selectedDate;
-      });
-    }
+  _getUserID(){
+    String userId = FirebaseAuth.instance.currentUser.uid;
+    setState(() {
+      this.userId = userId;
+    });
   }
-
-  _pickEndDate() async {
-    DateTime selectedDate = await showDatePicker(
-        context: context,
-        initialDate: endDate,
-        firstDate: DateTime(DateTime.now().year -2),
-        lastDate: DateTime(DateTime.now().year +2));
-    if(selectedDate != null){
-      setState(() {
-        endDate = selectedDate;
-      });
-    }
-  }*/
+}

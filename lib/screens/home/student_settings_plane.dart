@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_intelij/screens/Seminar/seminar_screen.dart';
 import 'package:flutter_intelij/screens/settings_page/notification_settings.dart';
 import 'package:flutter_intelij/screens/subjectSelection/subject_selection.dart';
 import 'package:flutter_intelij/services/auth.dart';
 
 class SettingsPanel extends StatefulWidget {
+  const SettingsPanel(this.userCategory, {Key key}) : super(key: key);
+
+  final String userCategory;
   @override
   _SettingsPanelState createState() => _SettingsPanelState();
 }
@@ -44,13 +48,17 @@ class _SettingsPanelState extends State<SettingsPanel> {
                           context,
                           MaterialPageRoute(builder: (context) => SubjectSelection())
                       );
-                    } else if (index == 3){
+                    } else if (index == 2) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => SeminarScreen(widget.userCategory))
+                      );
+                    }else if (index == 3){
                       Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => NotificationSettings())
                       );
-                    }
-                    else if (index == 5){
+                    } else if (index == 5){
                       _auth.signOut();
                     }
                     setState(() {
