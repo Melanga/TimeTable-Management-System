@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/Seminar/seminar_screen.dart';
 import 'package:flutter_intelij/screens/settings_page/notification_settings.dart';
 import 'package:flutter_intelij/screens/subjectSelection/subject_selection.dart';
+import 'package:flutter_intelij/screens/toDoList/screens/homepage.dart';
 import 'package:flutter_intelij/services/auth.dart';
 
 class SettingsPanel extends StatefulWidget {
@@ -43,7 +44,12 @@ class _SettingsPanelState extends State<SettingsPanel> {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: () async{
-                    if (index == 1){
+                    if (index == 0){
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Homepage())
+                      );
+                    } else if (index == 1){
                       Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => SubjectSelection())

@@ -16,18 +16,14 @@ class SeminarScreen extends StatefulWidget {
 
 class _SeminarScreenState extends State<SeminarScreen> {
   List <String>subjectShowList = [""];
-  Map <String, String> yearMap = {
-    "19" : "100",
-    "18" : "200",
-    "17" : "300",
-    "16" : "400"
-  };
+  Map <String, String> yearMap = {};
   String userId = FirebaseAuth.instance.currentUser.uid;
   Stream seminarStream;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _setYearMap();
     _getSubjectList();
   }
   @override
@@ -165,6 +161,18 @@ class _SeminarScreenState extends State<SeminarScreen> {
     });
     setState(() {
       this.subjectShowList = returnSubjectList;
+    });
+  }
+
+  _setYearMap() async{
+    await FirebaseFirestore.instance.collection("SemesterData").get().then((doc) {
+      if(doc != null){
+        doc.docs.forEach((element) {
+          yearMap[element.data()['email_No'].toString()] = element.id;
+        });
+      }
+      setState(() {
+      });
     });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/home/student_settings_plane.dart';
+import 'package:flutter_intelij/screens/lecturer/lecturer_subjects.dart';
 import 'package:flutter_intelij/screens/widget/subject_card_builder.dart';
 import 'package:flutter_intelij/services/auth.dart';
 
@@ -19,6 +20,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
   final List<String> weekDaysFirebase = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
   final scaffoldKey = GlobalKey<ScaffoldState>();
   String userCategory = "";
+  bool buttonVisibility = false;
 
   @override
   void initState() {
@@ -120,13 +122,33 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           ),
         ],
       ),
+      floatingActionButton: Visibility(
+        visible: buttonVisibility,
+        child: FloatingActionButton.extended(
+          label: Text("My Subjects"),
+          onPressed: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LecturerSubjects(),
+              ),
+            ).then((value) {
+                setState(() {});
+              },
+            );
+          },
+        ),
+      ),
     );
   }
 
   _categorizeUser(){
     final userEmail = FirebaseAuth.instance.currentUser.email;
     if(userEmail.endsWith("@uwu.ac.lk")){
-      setState(() => {this.userCategory = "lecturer"});
+      setState(() {
+        this.userCategory = "lecturer";
+        buttonVisibility = true;
+      });
     } else if (userEmail.endsWith("@example.com")){
       setState(() => {this.userCategory = "student"});
     }

@@ -2,9 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intelij/screens/addSubject/add_new_subject.dart';
+import 'package:flutter_intelij/screens/addSubject/edit_subject_popup_builder.dart';
 import 'package:flutter_intelij/screens/home/admin_settings_drawer.dart';
-import 'package:flutter_intelij/screens/widget/admin_subject_card_builder.dart';
 import 'package:flutter_intelij/services/auth.dart';
+import 'package:flutter_intelij/services/subject_services.dart';
 import 'package:flutter_intelij/shared/hero_dialog_route.dart';
 
 
@@ -19,16 +20,20 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
   TextEditingController textController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthSevice _auth = AuthSevice();
+  List<String> finalSubjectList = [];
+  List<String> subjectList;
 
 
   @override
   void initState() {
     super.initState();
     textController = TextEditingController();
+    _setSubjectList();
   }
 
   @override
   Widget build(BuildContext context) {
+    print(subjectList);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -81,7 +86,7 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
           ),
         ),
       ),
-      drawer: adminSettingsDrawer,
+      drawer: AdminSettingsDrawer(),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -108,51 +113,16 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
                 ),
               ),
             ),
-            Align(
-              alignment: Alignment(5.39, -0.95),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                child: Container(
-                  width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: Color(0xFF438E99),
-                    borderRadius: BorderRadius.circular(50),
-                    shape: BoxShape.rectangle,
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Expanded(
-                        child: Align(
-                          alignment: Alignment(0, 0),
-                          child:TextFormField(
-                              controller: textController,
-                              obscureText: false,
-                              decoration: InputDecoration(
-                                hintText: 'Search here...',
-                                hintStyle: TextStyle(
-                                  color: Color(0xFFE0F2F1),
-                                  fontSize: 16,
-                                ),
-                              ),
-                              style: TextStyle(
-                                fontFamily: 'Poppins',
-                                color: Color(0xFFE0F2F1),
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      Icon(
-                          Icons.search,
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                    ],
-                  ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: CupertinoSearchTextField(
+                itemColor: Colors.white,
+                backgroundColor: Colors.teal,
+                placeholderStyle: TextStyle(
+                  color: Colors.white70
                 ),
+                borderRadius: BorderRadius.circular(25),
+                onSubmitted: _searchOperation,
               ),
             ),
             Expanded(
@@ -183,7 +153,45 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
                             ),
                             child: Padding(
                               padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                              child: AdminSubjectCardBuilder().adminSubjectCardBuilder
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: FirebaseFirestore.instance.collection("Subjects").where(FieldPath.documentId, whereIn: subjectList).snapshots(),
+                                  builder: (context, snapshot){
+                                    if (snapshot.hasData){
+                                      return ListView(
+                                        children: snapshot.data.docs.map((doc) {
+                                          return Hero(
+                                            tag: doc.id,
+                                            child: Padding(
+                                              padding: EdgeInsets.zero,
+                                              child: Card(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(25)
+                                                ),
+                                                child: ListTile(
+                                                  contentPadding: EdgeInsets.fromLTRB(20, 7, 20, 7),
+                                                  title: Text(doc.data()['subject_Name']),
+                                                  //subtitle: Text(doc.id),
+                                                  trailing: Text(doc.id),
+                                                  onTap: (){
+                                                    Navigator.of(context).push(
+                                                      HeroDialogRoute(
+                                                        builder: (context) => Center(
+                                                            child: EditSubjectPopUpBuilder(doc)
+                                                        ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      );
+                                    } else {
+                                      return Text("no data");
+                                    }
+                                  }
+                              )
                             ),
                           ),
                         ),
@@ -197,5 +205,29 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
         ),
       ),
     );
+  }
+
+  _setSubjectList() async{
+    List <String> subjectList = await SubjectServices().getSubjectList();
+    setState(() {
+      this.subjectList = subjectList;
+      this.finalSubjectList = subjectList;
+    });
+  }
+
+  _searchOperation(String searchText){
+    List<String> searchResult = [];
+    this.finalSubjectList.forEach((subject) {
+      if (subject.toLowerCase().contains(searchText.toLowerCase())){
+        searchResult.add(subject);
+      }
+    });
+    setState(() {
+      if(searchResult.isEmpty){
+        this.subjectList = ["empty"];
+      } else {
+        this.subjectList = searchResult;
+      }
+    });
   }
 }

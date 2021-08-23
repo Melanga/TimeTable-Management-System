@@ -19,19 +19,15 @@ class _SubjectSelectionState extends State<SubjectSelection> {
   Map<String, dynamic> savedSelectedSubjects = {};
   Map <String, bool> values = {};
   String userCategory = '';
-  Map <String, String> yearMap = {
-    "19" : "100",
-    "18" : "200",
-    "17" : "300",
-    "16" : "400"
-  };
+  Map <String, String> yearMap = {};
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getSubjectList();
     _categorizeUser();
+    _getSubjectList();
+    _setYearMap();
     try {
       Future<Map<String, dynamic>> selectedSubjects = _getSelectedSubjects();
       selectedSubjects.then((value) {
@@ -45,6 +41,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
 
   @override
   Widget build(BuildContext context) {
+    print(subjectShowList);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF003640),
@@ -65,10 +62,10 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                     return ListView(
                       children: snapshot.data.docs.map((subjectData) {
                         if(userCategory == "lecturer"){
-                          if (savedSelectedSubjects.isNotEmpty){
+                          if (savedSelectedSubjects.isNotEmpty && savedSelectedSubjects.length<values.length){
                             values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']]);
                           } else {
-                            values.putIfAbsent(subjectData.data()['subject_Name'], () => false);
+                            values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']] == null ? false : true);
                           }
                           return Card(
                             child: CheckboxListTile(
@@ -126,10 +123,20 @@ class _SubjectSelectionState extends State<SubjectSelection> {
     final userEmail = FirebaseAuth.instance.currentUser.email;
     final String degree = userEmail.substring(0,3).toUpperCase();
     final String year = this.yearMap[userEmail.substring(3, 5)];
-    QuerySnapshot subjectGroups = await FirebaseFirestore.instance.collection('SubjectGroup').where('degree', isEqualTo: degree).where('year', isEqualTo: year).get();
-    subjectGroups.docs.forEach((subjectGroup) {
-      returnSubjectList.add(subjectGroup.data()['course_Code']);
-    });
+    if(userCategory == "lecturer"){
+      await FirebaseFirestore.instance.collection('Subjects').get().then((doc) {
+        if(doc != null){
+          doc.docs.forEach((element) {
+            returnSubjectList.add(element.id);
+          });
+        }
+      });
+    } else {
+      QuerySnapshot subjectGroups = await FirebaseFirestore.instance.collection('SubjectGroup').where('degree', isEqualTo: degree).where('year', isEqualTo: year).get();
+      subjectGroups.docs.forEach((subjectGroup) {
+        returnSubjectList.add(subjectGroup.data()['course_Code']);
+      });
+    }
     setState(() {
       this.subjectShowList = returnSubjectList;
     });
@@ -153,5 +160,17 @@ class _SubjectSelectionState extends State<SubjectSelection> {
     } else if (userEmail.endsWith("@example.com")){
       setState(() => {this.userCategory = "student"});
     }
+  }
+
+  _setYearMap() async{
+    await FirebaseFirestore.instance.collection("SemesterData").get().then((doc) {
+      if(doc != null){
+        doc.docs.forEach((element) {
+          yearMap[element.data()['email_No'].toString()] = element.id;
+        });
+      }
+      setState(() {
+      });
+    });
   }
 }
