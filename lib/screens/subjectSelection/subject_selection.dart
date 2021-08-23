@@ -2,7 +2,9 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_intelij/services/subject_services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SubjectSelection extends StatefulWidget {
@@ -15,7 +17,9 @@ class SubjectSelection extends StatefulWidget {
 class _SubjectSelectionState extends State<SubjectSelection> {
 
   Stream subjects = FirebaseFirestore.instance.collection('Subjects').snapshots();
-  List <String>subjectShowList = [""];
+  List <String>subjectShowList = ["empty"];
+  List <String>subjectList = [];
+  List <String>finalSubjectList = [];
   Map<String, dynamic> savedSelectedSubjects = {};
   Map <String, bool> values = {};
   String userCategory = '';
@@ -25,6 +29,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _setSubjectList();
     _categorizeUser();
     _getSubjectList();
     _setYearMap();
@@ -41,7 +46,6 @@ class _SubjectSelectionState extends State<SubjectSelection> {
 
   @override
   Widget build(BuildContext context) {
-    print(subjectShowList);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF003640),
@@ -49,6 +53,19 @@ class _SubjectSelectionState extends State<SubjectSelection> {
       ),
       body: Column(
         children: [
+          Visibility(
+            visible: userCategory == "lecturer",
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.teal,
+              ),
+              padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
+              child: CupertinoSearchTextField(
+                backgroundColor: Colors.white70,
+                onSubmitted: _searchOperation,
+              ),
+            ),
+          ),
           Expanded(
             child: Container(
               decoration: BoxDecoration(
@@ -56,13 +73,13 @@ class _SubjectSelectionState extends State<SubjectSelection> {
               ),
               padding: EdgeInsets.all(10),
               child: StreamBuilder<QuerySnapshot>(
-                stream: subjects,
+                stream: FirebaseFirestore.instance.collection('Subjects').where(FieldPath.documentId, whereIn: subjectShowList).snapshots(),
                 builder: (context, snapshot){
                   if(snapshot.hasData){
                     return ListView(
                       children: snapshot.data.docs.map((subjectData) {
                         if(userCategory == "lecturer"){
-                          if (savedSelectedSubjects.isNotEmpty && savedSelectedSubjects.length<values.length){
+                          if (savedSelectedSubjects.isNotEmpty && savedSelectedSubjects.length<values.length && finalSubjectList.length != subjectList.length){
                             values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']]);
                           } else {
                             values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']] == null ? false : true);
@@ -70,6 +87,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                           return Card(
                             child: CheckboxListTile(
                                 title: Text(subjectData.data()['subject_Name']),
+                                subtitle: Text(subjectData.id),
                                 controlAffinity: ListTileControlAffinity.trailing,
                                 value: values[subjectData.data()['subject_Name']],
                                 onChanged: (value){
@@ -107,7 +125,17 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                       }).toList(),
                     );
                   } else{
-                    return Text("Loading");
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Text("Loading Data...",
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18
+                          ),
+                          textAlign: TextAlign.center,),
+                      ],
+                    );
                   }
                 },
               ),
@@ -124,7 +152,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
     final String degree = userEmail.substring(0,3).toUpperCase();
     final String year = this.yearMap[userEmail.substring(3, 5)];
     if(userCategory == "lecturer"){
-      await FirebaseFirestore.instance.collection('Subjects').get().then((doc) {
+      await FirebaseFirestore.instance.collection('Subjects').where(FieldPath.documentId, whereIn: this.subjectList).get().then((doc) {
         if(doc != null){
           doc.docs.forEach((element) {
             returnSubjectList.add(element.id);
@@ -138,7 +166,11 @@ class _SubjectSelectionState extends State<SubjectSelection> {
       });
     }
     setState(() {
-      this.subjectShowList = returnSubjectList;
+      if(returnSubjectList.isEmpty){
+        this.subjectShowList = ["empty"];
+      }else{
+        this.subjectShowList = returnSubjectList;
+      }
     });
   }
   
@@ -172,5 +204,31 @@ class _SubjectSelectionState extends State<SubjectSelection> {
       setState(() {
       });
     });
+  }
+
+  _setSubjectList() async{
+    List <String> subjectList = await SubjectServices().getSubjectList();
+    setState(() {
+      this.subjectList = subjectList;
+      this.subjectShowList = subjectList;
+      this.finalSubjectList = subjectList;
+    });
+  }
+
+  _searchOperation(String searchText){
+    List<String> searchResult = [];
+    this.finalSubjectList.forEach((subject) {
+      if (subject.toLowerCase().contains(searchText.toLowerCase())){
+        searchResult.add(subject);
+      }
+    });
+    setState(() {
+      if(searchResult.isEmpty){
+        this.subjectList = ["empty"];
+      } else {
+        this.subjectList = searchResult;
+      }
+    });
+    _getSubjectList();
   }
 }
