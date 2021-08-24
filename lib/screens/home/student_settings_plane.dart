@@ -19,7 +19,6 @@ class _SettingsPanelState extends State<SettingsPanel> {
     'Subjects',
     'Seminar & Workshops',
     'Notifications',
-    'Advanced Options',
     'Log Out',
   ];
 
@@ -64,7 +63,7 @@ class _SettingsPanelState extends State<SettingsPanel> {
                           context,
                           MaterialPageRoute(builder: (context) => NotificationSettings())
                       );
-                    } else if (index == 5){
+                    } else if (index == 4){
                       _auth.signOut();
                     }
                     setState(() {

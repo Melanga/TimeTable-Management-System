@@ -29,11 +29,12 @@ class MyApp extends StatelessWidget {
           return StreamProvider<AppUser>.value(
             value: AuthSevice().user,
             child: MaterialApp(
+              title: 'TimeTable',
               theme: ThemeData(
                 // Define the default brightness and colors.
                 brightness: Brightness.light,
-                primaryColor: Colors.red[400],
-                accentColor: Colors.cyan[600],
+                primaryColor: Color(0xFF012329),
+                accentColor: Color(0xFF003640),
                 hintColor: Colors.white70,
 
                 // Define the default font family.

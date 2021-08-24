@@ -113,6 +113,7 @@ class _TaskpageState extends State<Taskpage> {
                             controller: TextEditingController()..text = _taskTitle,
                             decoration: InputDecoration(
                               hintText: "Enter Task Title",
+                              hintStyle: TextStyle(color: Colors.black54),
                               border: InputBorder.none,
                             ),
                             style: TextStyle(
@@ -145,6 +146,7 @@ class _TaskpageState extends State<Taskpage> {
                         controller: TextEditingController()..text = _taskDescription,
                         decoration: InputDecoration(
                           hintText: "Enter Description",
+                          hintStyle: TextStyle(color: Colors.black54),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 24.0,
