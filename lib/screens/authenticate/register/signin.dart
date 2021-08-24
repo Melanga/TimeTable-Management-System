@@ -29,14 +29,15 @@ class _SignInState extends State<SignIn> {
     return loading ? Loading() : Scaffold(
       appBar: AppBar(
         backgroundColor: Color(0xFF012329),
+        centerTitle: true,
         title: Text("Sign in"),
         actions: <Widget>[
           FlatButton.icon(
-            icon: Icon(Icons.person, color: Colors.white),
-            label: Text('Register', style: TextStyle(color: Colors.white),),
+            label: Text('Go to Register', style: TextStyle(color: Colors.white),),
             onPressed: () {
               widget.toggleView();
             },
+            icon: Icon(Icons.arrow_forward_ios_rounded, color: Colors.white,),
           )
         ],
       ),
@@ -52,7 +53,28 @@ class _SignInState extends State<SignIn> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
-                      SizedBox(height: 20.0,),
+
+                      Container(
+                        width: 70,
+                        height: 70,
+                        margin: EdgeInsets.all(20.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: AssetImage('assets/images/logo.jpg'),
+                              fit: BoxFit.contain
+                          ),
+                        ),
+                      ),
+
+                      Text('Timetable & Task Management System',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20.0,
+                        ),
+                      ),
+
                       TextFormField(
                         decoration: InputDecoration(
                             hintText: 'e-mail',
@@ -102,11 +124,14 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(50, 10, 50, 0),
+                        padding: const EdgeInsets.fromLTRB(70, 10, 70, 0),
                         child: TextButton(
                           child: Text(
                             'Sign in',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              fontSize: 16.0,
+                            ),
                           ),
                           onPressed: () async {
                             if (_formKey.currentState.validate()) {
@@ -128,7 +153,7 @@ class _SignInState extends State<SignIn> {
                             }
                           },
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all<Color>(Colors.teal),
+                            backgroundColor: MaterialStateProperty.all<Color>(Color(0xff05b5d3)),
                             shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(25)
                             ))

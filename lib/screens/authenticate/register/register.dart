@@ -53,8 +53,8 @@ class _RegisterState extends State<Register> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Container(
-                            width: 100,
-                            height: 100,
+                            width: 70,
+                            height: 70,
                             margin: EdgeInsets.all(20.0),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -108,11 +108,14 @@ class _RegisterState extends State<Register> {
                         ),
                         SizedBox(height: 20.0,),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                          padding: const EdgeInsets.fromLTRB(70, 0, 70, 0),
                           child: TextButton(
                             child: Text(
                               'Register',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                              ),
                             ),
                             onPressed: ()async {
                               if (_formKey.currentState.validate()) {
@@ -134,7 +137,7 @@ class _RegisterState extends State<Register> {
                               }
                             },
                             style: ButtonStyle(
-                                backgroundColor: MaterialStateProperty.all<Color>(Colors.teal),
+                                backgroundColor: MaterialStateProperty.all<Color>(Color(0xff05b5d3)),
                                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(25)
                                 ))

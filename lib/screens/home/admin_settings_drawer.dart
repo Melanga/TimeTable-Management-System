@@ -15,7 +15,7 @@ class AdminSettingsDrawer extends StatelessWidget {
         width: 100,
         height: 100,
         decoration: BoxDecoration(
-          color: Colors.teal,
+          color: Color(0xFF012329),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.max,
@@ -44,7 +44,7 @@ class AdminSettingsDrawer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(18.0),
                       )
                   ),
-                  backgroundColor: MaterialStateProperty.all(Colors.cyan),
+                  backgroundColor: MaterialStateProperty.all(Color(0xff05b5d3)),
                 ),
                 onPressed: () {Navigator.push(
                   context,
@@ -55,6 +55,7 @@ class AdminSettingsDrawer extends StatelessWidget {
                   "Start New Semester",
                   style: TextStyle(
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
@@ -69,7 +70,7 @@ class AdminSettingsDrawer extends StatelessWidget {
                         borderRadius: BorderRadius.circular(18.0),
                       )
                   ),
-                  backgroundColor: MaterialStateProperty.all(Colors.cyan),
+                  backgroundColor: MaterialStateProperty.all(Color(0xff05b5d3)),
                 ),
                 onPressed: () {
                   _auth.signOut();
@@ -78,6 +79,7 @@ class AdminSettingsDrawer extends StatelessWidget {
                   "Log Out",
                   style: TextStyle(
                     color: Colors.white,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
 
