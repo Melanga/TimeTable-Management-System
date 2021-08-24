@@ -34,6 +34,7 @@ class MyApp extends StatelessWidget {
                 brightness: Brightness.light,
                 primaryColor: Colors.red[400],
                 accentColor: Colors.cyan[600],
+                hintColor: Colors.white70,
 
                 // Define the default font family.
                 fontFamily: 'Poppins',

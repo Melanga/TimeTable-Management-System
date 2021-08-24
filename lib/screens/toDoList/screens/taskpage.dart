@@ -235,6 +235,7 @@ class _TaskpageState extends State<Taskpage> {
                               },
                               decoration: InputDecoration(
                                 hintText: "Enter your todo tasks",
+                                hintStyle: TextStyle(color: Colors.black),
                                 border: InputBorder.none,
                               ),
 

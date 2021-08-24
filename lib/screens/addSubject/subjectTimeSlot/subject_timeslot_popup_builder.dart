@@ -95,7 +95,10 @@ class _EditSubjectTimeSlotPopupBuilderState extends State<EditSubjectTimeSlotPop
                     SizedBox(height: 20),
                     TextFormField(
                       style: TextStyle(
-                          color: Colors.white
+                          color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white70))
                       ),
                       initialValue: location,
                       onChanged: (inputValue)  {
@@ -339,7 +342,8 @@ class _AddNewSubjectTimeSlotPopupBuilderState extends State<AddNewSubjectTimeSlo
                         hintText: "Enter location",
                         hintStyle: TextStyle(
                           color: Colors.white70,
-                        )
+                        ),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white70))
                     ),
                     style: TextStyle(
                         color: Colors.white

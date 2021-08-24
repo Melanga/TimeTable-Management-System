@@ -31,7 +31,7 @@ class _RegisterState extends State<Register> {
           centerTitle: true,
           title: Text("Register"),
           actions: <Widget>[
-            FlatButton.icon(
+            TextButton.icon(
               label: Text('Go to Sign in', style: TextStyle(color: Colors.white),),
               onPressed: () {
                 widget.toggleView();
@@ -76,7 +76,12 @@ class _RegisterState extends State<Register> {
                         SizedBox(height: 20.0,),
                         TextFormField(
                           //decoration: textInputDecoration.copyWith(hintText: 'Email', hintStyle: TextStyle(fontWeight: FontWeight.bold)),
-                          decoration: InputDecoration(hintText: 'e-mail', hintStyle: TextStyle(color: Colors.white)),
+                          decoration: InputDecoration(
+                            hintText: 'e-mail',
+                            hintStyle: TextStyle(color: Colors.white),
+                            enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white70))
+                          ),
+                          style: TextStyle(color: Colors.white),
                           validator: (val) {
                             return val.isEmpty ? 'Enter an email' : null;
                           },
@@ -87,7 +92,12 @@ class _RegisterState extends State<Register> {
                         SizedBox(height: 20.0,),
                         TextFormField(
                           //decoration: textInputDecoration.copyWith(hintText: 'Password', hintStyle: TextStyle(fontWeight: FontWeight.bold)),
-                          decoration: InputDecoration(hintText: 'password', hintStyle: TextStyle(color: Colors.white)),
+                          decoration: InputDecoration(
+                              hintText: 'password',
+                              hintStyle: TextStyle(color: Colors.white),
+                              enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.white70))
+                          ),
+                          style: TextStyle(color: Colors.white),
                           validator: (val) {
                             return val.length < 6 ? 'Enter password at least six characters long' : null;
                           },

@@ -37,7 +37,8 @@ class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
                   children: [
                     TextFormField(
                       decoration: InputDecoration(
-                        hintText: "Enter Course Code"
+                        hintText: "Enter Course Code",
+                        hintStyle: TextStyle(color: Colors.black)
                       ),
                       onChanged: (inputValue)  {
                         subjectCode = inputValue;
@@ -47,7 +48,8 @@ class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
                     SizedBox(height: 20),
                     TextFormField(
                       decoration: InputDecoration(
-                          hintText: "Enter Subject Name"
+                          hintText: "Enter Subject Name",
+                          hintStyle: TextStyle(color: Colors.black)
                       ),
                       onChanged: (inputValue)  {
                         subjectName = inputValue;
@@ -57,7 +59,8 @@ class _AddNewSubjectPopUpState extends State<AddNewSubjectPopUp> {
                     SizedBox(height: 20.0,),
                     TextFormField(
                       decoration: InputDecoration(
-                          hintText: "Enter Subject Note"
+                          hintText: "Enter Subject Note",
+                          hintStyle: TextStyle(color: Colors.black)
                       ),
                       onChanged: (inputValue)  {
                         subjectNote = inputValue;

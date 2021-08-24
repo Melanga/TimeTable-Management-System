@@ -8,7 +8,7 @@ import 'package:flutter_intelij/screens/home/home_screen.dart';
 class HomePageWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List <String> adminUsers = ["csiadmin@example.com"];
+    List <String> adminUsers = ["csiadmin@example.com", "dissanayakedmmb@gmail.com"];
     bool admin = false;
     final userEmail = FirebaseAuth.instance.currentUser.email;
     if (adminUsers.contains(userEmail)) {

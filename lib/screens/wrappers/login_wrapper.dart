@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intelij/models/app_user.dart';
 import 'package:flutter_intelij/screens/authenticate/authenticate.dart';
 import 'package:flutter_intelij/screens/wrappers/home_page_wrapper.dart';
+import 'package:flutter_intelij/screens/wrappers/verify_screen.dart';
 import 'package:provider/provider.dart';
 
 class LoginWrapper extends StatelessWidget {
@@ -13,7 +14,7 @@ class LoginWrapper extends StatelessWidget {
     if (user == null) {
       return Authenticate();
     } else {
-      return HomePageWrapper();
+      return VerifyScreen();
     }
   }
 }
