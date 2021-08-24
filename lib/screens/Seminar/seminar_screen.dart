@@ -38,7 +38,6 @@ class _SeminarScreenState extends State<SeminarScreen> {
     print(this.subjectShowList);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF003640),
         title: Text("Seminar"),
       ),
       floatingActionButton: Visibility(
@@ -64,7 +63,7 @@ class _SeminarScreenState extends State<SeminarScreen> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.teal,
+                  color: Color(0xff107272),
               ),
               child: SingleChildScrollView(
                 child: Padding(

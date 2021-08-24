@@ -31,7 +31,7 @@ class _NotificationSettingsState extends State<NotificationSettings> {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: Colors.teal,
+          color: Color(0xff107272),
         ),
         padding: const EdgeInsets.fromLTRB(5, 20, 5, 20),
         child: Column(

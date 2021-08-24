@@ -29,7 +29,7 @@ class _SubjectTaskBuilderState extends State<SubjectTaskBuilder> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                color: Colors.blueGrey,
+                color: Color(0xffa8cece ),
                 child: ListTile(
                   title: Text(doc.data()['title']),
                   subtitle: Text(doc.data()['description']),

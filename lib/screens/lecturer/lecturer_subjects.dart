@@ -39,55 +39,59 @@ class _LecturerSubjectsState extends State<LecturerSubjects> {
           children: [
             Expanded(
               child: Container(
-                child: StreamBuilder<QuerySnapshot>(
-                        stream: stream,
-                        builder: (context, snapshot){
-                          if (snapshot.hasData){
-                            return ListView(
-                              children: snapshot.data.docs.map((doc) {
-                                return Hero(
-                                  tag: doc.id,
-                                  child: Padding(
-                                    padding: EdgeInsets.zero,
-                                    child: Card(
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(25)
-                                      ),
-                                      child: ListTile(
-                                        contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                        title: Text(doc.id),
-                                        //title: Text(doc.data()['course_Code']),
-                                        subtitle: Text(doc.data()['subject_Name']),
-                                        onTap: () async{
-                                          DocumentSnapshot subject = await FirebaseFirestore.instance.collection('Subjects').doc(doc.data()['course_Code']).get();
-                                            Navigator.of(context).push(
-                                              HeroDialogRoute(
-                                                builder: (context) => Center(
-                                                    child: EditSubjectPopUpBuilder(doc)
+                color: Color(0xff107272),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: StreamBuilder<QuerySnapshot>(
+                          stream: stream,
+                          builder: (context, snapshot){
+                            if (snapshot.hasData){
+                              return ListView(
+                                children: snapshot.data.docs.map((doc) {
+                                  return Hero(
+                                    tag: doc.id,
+                                    child: Padding(
+                                      padding: EdgeInsets.zero,
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(25)
+                                        ),
+                                        child: ListTile(
+                                          contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                                          title: Text(doc.id),
+                                          //title: Text(doc.data()['course_Code']),
+                                          subtitle: Text(doc.data()['subject_Name']),
+                                          onTap: () async{
+                                            DocumentSnapshot subject = await FirebaseFirestore.instance.collection('Subjects').doc(doc.data()['course_Code']).get();
+                                              Navigator.of(context).push(
+                                                HeroDialogRoute(
+                                                  builder: (context) => Center(
+                                                      child: EditSubjectPopUpBuilder(doc)
+                                                  ),
                                                 ),
-                                              ),
-                                            );
-                                        },
+                                              );
+                                          },
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                );
-                              }).toList(),
-                            );
-                          } else {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text("Loading Data...",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18
-                                  ),
-                                  textAlign: TextAlign.center,),
-                              ],
-                            );
+                                  );
+                                }).toList(),
+                              );
+                            } else {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  Text("Loading Data...",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18
+                                    ),
+                                    textAlign: TextAlign.center,),
+                                ],
+                              );
+                            }
                           }
-                        }
+                  ),
                 ),
               ),
             )

@@ -52,36 +52,51 @@ class _VerifyScreenState extends State<VerifyScreen> {
           title: Text("Verify your email"),
         ),
         body: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 30, 15, 20),
-                  child: Text(
-                    'An email has been sent to \n- ${user.email}. \nPlease verify your email. '
-                    'Make sure you have provided your University email Address. '
-                    'Otherwise you will not be able to access the Time Table',
-                    style: TextStyle(
-                      fontSize: 18
+          children: [
+            Expanded(
+              child: Container(
+                color: Color(0xFF003640),
+                child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(10, 30, 15, 20),
+                          child: Text(
+                            'An email has been sent to \n- ${user.email}. \nPlease verify your email. '
+                            'Make sure you have provided your University email Address. '
+                            'Otherwise you will not be able to access the Time Table',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18
+                            ),
+                          ),
+                        ),
+                        TextButton(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10 ,3, 10, 3),
+                            child: Text(
+                              'Change Your Email',
+                              style: TextStyle(color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          onPressed: ()async {
+                            AuthSevice auth = new AuthSevice();
+                            auth.signOut();
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Color(0xff05b5d3)),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(25)
+                              ))
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
-                TextButton(
-                  child: Text(
-                    'Change Your Email',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  onPressed: ()async {
-                    AuthSevice auth = new AuthSevice();
-                    auth.signOut();
-                  },
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(Colors.teal),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25)
-                      ))
-                  ),
-                ),
-              ],
-            )
+              ),
+            ),
+          ],
+        )
       );
     } else {
       return Loading();

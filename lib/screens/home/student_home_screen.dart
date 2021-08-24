@@ -108,7 +108,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
           Expanded(
             child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.teal,
+                      color: Color( 0xff107272),
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30.0),
                           topRight: Radius.circular(30.0)
@@ -149,7 +149,7 @@ class _StudentHomeScreenState extends State<StudentHomeScreen> {
         this.userCategory = "lecturer";
         buttonVisibility = true;
       });
-    } else if (userEmail.endsWith("@example.com")){
+    } else if (userEmail.endsWith("@std.uwu.ac.lk")){
       setState(() => {this.userCategory = "student"});
     }
   }

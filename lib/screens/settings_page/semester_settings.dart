@@ -30,6 +30,7 @@ class _SemesterSettingsState extends State<SemesterSettings> {
         children: [
           Expanded(
             child: Container(
+              color: Color(0xff107272),
               child: Column(
                 children: [
                   StreamBuilder<QuerySnapshot>(
@@ -42,7 +43,7 @@ class _SemesterSettingsState extends State<SemesterSettings> {
                               return Hero(
                                 tag: doc.id,
                                 child: Padding(
-                                  padding: EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                  padding: EdgeInsets.fromLTRB(30, 5, 30, 0),
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(10)

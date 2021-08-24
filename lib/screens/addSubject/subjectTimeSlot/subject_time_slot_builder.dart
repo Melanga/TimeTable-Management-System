@@ -27,8 +27,7 @@ class _SubjectTimeSlotBuilderState extends State<SubjectTimeSlotBuilder> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          shadowColor: Colors.teal,
-                          color: Color(0x9fe3bf),
+                          color: Color(0xffa8cece),
                           child: ListTile(
                             title: Text(doc2.data()['day']),
                             subtitle: Text("${doc2.data()['start_Time']} to ${doc2.data()['end_Time']}"),

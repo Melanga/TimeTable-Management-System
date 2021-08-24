@@ -33,8 +33,8 @@ class _SeminarTimeSlotBuilderState extends State<SeminarTimeSlotBuilder> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
                     ),
-                    shadowColor: Colors.teal,
-                    color: Color(0x9fe3bf),
+                    //shadowColor: Colors.teal,
+                    color: Color(0xffa8cece),
                     child: ListTile(
                       title: Text(doc2.data()['date']),
                       subtitle: Text("${doc2.data()['start_Time']} to ${doc2.data()['end_Time']}"),

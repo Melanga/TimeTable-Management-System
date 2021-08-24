@@ -57,7 +57,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
             visible: userCategory == "lecturer",
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.teal,
+                color: Color(0xff107272),
               ),
               padding: EdgeInsets.fromLTRB(25, 10, 25, 10),
               child: CupertinoSearchTextField(
@@ -69,7 +69,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
           Expanded(
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.teal,
+                color: Color(0xff107272),
               ),
               padding: EdgeInsets.all(10),
               child: StreamBuilder<QuerySnapshot>(
@@ -85,6 +85,9 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                             values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']] == null ? false : true);
                           }
                           return Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
                             child: CheckboxListTile(
                                 title: Text(subjectData.data()['subject_Name']),
                                 subtitle: Text(subjectData.id),
@@ -106,6 +109,9 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                               values.putIfAbsent(subjectData.data()['subject_Name'], () => false);
                             }
                             return Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
                               child: CheckboxListTile(
                                   title: Text(subjectData.data()['subject_Name']),
                                   controlAffinity: ListTileControlAffinity.trailing,

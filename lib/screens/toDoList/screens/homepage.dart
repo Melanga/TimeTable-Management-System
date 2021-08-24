@@ -23,7 +23,7 @@ class _HomepageState extends State<Homepage> {
         child: Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(horizontal: 24.0),
-          color: Color(0xff6f6f6),
+          color: Color(0xff107272),
           child: Stack(
             children: [
               Column(
@@ -39,39 +39,42 @@ class _HomepageState extends State<Homepage> {
                     ),
                   ),*/
                   Expanded(
-                    child: FutureBuilder(
-                      initialData: [],
-                      future: _dbHelper.getTasks(),
-                      builder: (context, snapshot) {
-                        return ScrollConfiguration(
-                          behavior: NoGlowBehaviour(),
-                          child: ListView.builder(
-                            itemCount: snapshot.data.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => Taskpage(
-                                        task: snapshot.data[index],
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: FutureBuilder(
+                        initialData: [],
+                        future: _dbHelper.getTasks(),
+                        builder: (context, snapshot) {
+                          return ScrollConfiguration(
+                            behavior: NoGlowBehaviour(),
+                            child: ListView.builder(
+                              itemCount: snapshot.data.length,
+                              itemBuilder: (context, index) {
+                                return GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => Taskpage(
+                                          task: snapshot.data[index],
+                                        ),
                                       ),
-                                    ),
-                                  ).then(
-                                    (value) {
-                                      setState(() {});
-                                    },
-                                  );
-                                },
-                                child: TaskCardWidget(
-                                  title: snapshot.data[index].title,
-                                  desc: snapshot.data[index].description,
-                                ),
-                              );
-                            },
-                          ),
-                        );
-                      },
+                                    ).then(
+                                      (value) {
+                                        setState(() {});
+                                      },
+                                    );
+                                  },
+                                  child: TaskCardWidget(
+                                    title: snapshot.data[index].title,
+                                    desc: snapshot.data[index].description,
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
