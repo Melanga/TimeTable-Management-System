@@ -8,7 +8,7 @@ import 'package:flutter_intelij/services/auth.dart';
 import 'package:flutter_intelij/shared/loading.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async{
   runApp(MyApp());
 }
 
