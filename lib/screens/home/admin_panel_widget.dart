@@ -17,7 +17,6 @@ class AdminPanelWidget extends StatefulWidget {
 }
 
 class _AdminPanelWidgetState extends State<AdminPanelWidget> {
-  TextEditingController textController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final AuthSevice _auth = AuthSevice();
   List<String> finalSubjectList = [];
@@ -27,13 +26,11 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
   @override
   void initState() {
     super.initState();
-    textController = TextEditingController();
     _setSubjectList();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(subjectList);
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
@@ -72,7 +69,9 @@ class _AdminPanelWidgetState extends State<AdminPanelWidget> {
             HeroDialogRoute(builder: (context) => Center(
                 child: AddNewSubjectPopUp()
             ))
-          );
+          ).then((value) {
+            _setSubjectList();
+          });
         },
         backgroundColor: Color(0x00606b),
         icon: Icon(

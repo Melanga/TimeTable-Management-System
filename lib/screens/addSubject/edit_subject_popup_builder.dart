@@ -20,6 +20,10 @@ class EditSubjectPopUpBuilder extends StatefulWidget {
 
 class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
 
+  String newSubjectCode = "";
+  String newSubjectName = "";
+  String newSubjectNote = "";
+
   @override
   Widget build(BuildContext context) {
     final bottom = MediaQuery.of(context).viewInsets.bottom;
@@ -49,14 +53,14 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                     initialValue: subjectCode,
                     //this create new subject fix it
                     onChanged: (inputValue)  {
-                      subjectCode = inputValue;
+                      this.newSubjectCode = inputValue;
                     },
                   ),
                   SizedBox(height: 20),
                   TextFormField(
                     initialValue: subjectName,
                     onChanged: (inputValue)  {
-                      subjectName = inputValue;
+                      this.newSubjectName = inputValue;
                     },
                   ),
                   SizedBox(height: 20.0,),
@@ -132,7 +136,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                   TextFormField(
                     initialValue: subjectNote,
                     onChanged: (inputValue)  {
-                      subjectNote = inputValue;
+                      this.newSubjectNote = inputValue;
                     },
                   ),
                   SizedBox(height: 20.0,),
@@ -147,7 +151,7 @@ class _EditSubjectPopUpBuilderState extends State<EditSubjectPopUpBuilder> {
                     ),
                     onPressed: () {
                       SubjectCRUDMethods crud = new SubjectCRUDMethods();
-                      crud.addSubjectData(subjectCode,  subjectName, subjectNote);
+                      crud.addSubjectData(subjectCode,  this.newSubjectName, this.newSubjectNote);
                       Navigator.pop(context);
                     },
                     child: Text(

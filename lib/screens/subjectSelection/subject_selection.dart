@@ -79,10 +79,10 @@ class _SubjectSelectionState extends State<SubjectSelection> {
                     return ListView(
                       children: snapshot.data.docs.map((subjectData) {
                         if(userCategory == "lecturer"){
-                          if (savedSelectedSubjects.isNotEmpty && savedSelectedSubjects.length<values.length && finalSubjectList.length != subjectList.length){
-                            values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']]);
+                          if (savedSelectedSubjects.isNotEmpty && savedSelectedSubjects.length<values.length){
+                            values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']] );
                           } else {
-                            values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']] == null ? false : true);
+                            values.putIfAbsent(subjectData.data()['subject_Name'], () => savedSelectedSubjects[subjectData.data()['subject_Name']] ?? false);
                           }
                           return Card(
                             shape: RoundedRectangleBorder(

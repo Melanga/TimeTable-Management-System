@@ -44,7 +44,10 @@ class _AddNewSeminarPopUpState extends State<AddNewSeminarPopUp> {
                   children: [
                     TextFormField(
                       decoration: InputDecoration(
-                          hintText: "Enter Seminar Name"
+                        hintText: "Enter Seminar Name",
+                        hintStyle: TextStyle(
+                          color: Colors.black54
+                        )
                       ),
                       onChanged: (inputValue)  {
                         this.seminarName = inputValue;
@@ -55,7 +58,10 @@ class _AddNewSeminarPopUpState extends State<AddNewSeminarPopUp> {
                     TextFormField(
                       maxLines: null,
                       decoration: InputDecoration(
-                          hintText: "Enter Seminar Description"
+                          hintText: "Enter Seminar Description",
+                          hintStyle: TextStyle(
+                              color: Colors.black54
+                          )
                       ),
                       onChanged: (inputValue)  {
                         this.seminarDescription = inputValue;

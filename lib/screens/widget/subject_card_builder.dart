@@ -77,12 +77,7 @@ class _SubjectCardBuilderState extends State<SubjectCardBuilder> {
                       ),
                       child: ListTile(
                         contentPadding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-                        title: Row(
-                          children: [
-                            Text(reverseSubjectMap[doc.data()['course_Code']]??"loading"),
-                            Text("  (${doc.data()['course_Code']})")
-                          ],
-                        ),
+                        title: Text(reverseSubjectMap[doc.data()['course_Code']]??"loading"),
                         //title: Text(doc.data()['course_Code']),
                         subtitle: Row(
                           children: <Widget>[
@@ -231,12 +226,8 @@ class _ShowSubjectPopUpBuilderState extends State<ShowSubjectPopUpBuilder> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Row(
-                      children: [
-                        Text(widget.subject.data()["subject_Name"] + "  ", style: _textLeadingStyle),
-                        Text(widget.subject.id, style: _textStyle),
-                      ],
-                    ),
+                    Text(widget.subject.data()["subject_Name"] + "  ", style: _textLeadingStyle),
+                    Text(widget.subject.id, style: _textStyle),
                     SizedBox(height: 30,),
                     Row(
                       children: [

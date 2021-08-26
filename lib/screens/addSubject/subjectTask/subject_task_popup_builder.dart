@@ -37,7 +37,10 @@ class _AddNewSubjectTaskState extends State<AddNewSubjectTask> {
               children: [
                 TextFormField(
                   decoration: InputDecoration(
-                      hintText: "Enter Title"
+                    hintText: "Enter Title",
+                    hintStyle: TextStyle(
+                      color: Colors.black54,
+                    )
                   ),
                   onChanged: (inputValue)  {
                     title = inputValue;
@@ -47,7 +50,10 @@ class _AddNewSubjectTaskState extends State<AddNewSubjectTask> {
                 SizedBox(height: 20),
                 TextField(
                   decoration: InputDecoration(
-                      hintText: "Enter Description"
+                      hintText: "Enter Description",
+                      hintStyle: TextStyle(
+                        color: Colors.black54,
+                      )
                   ),
                   maxLines: null,
                   onChanged: (inputValue)  {

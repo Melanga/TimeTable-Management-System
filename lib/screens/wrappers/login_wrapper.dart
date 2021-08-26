@@ -14,7 +14,7 @@ class LoginWrapper extends StatelessWidget {
     if (user == null) {
       return Authenticate();
     } else {
-      return VerifyScreen();
+      return HomePageWrapper();
     }
   }
 }

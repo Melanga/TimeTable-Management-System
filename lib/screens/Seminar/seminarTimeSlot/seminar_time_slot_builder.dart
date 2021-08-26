@@ -358,7 +358,10 @@ class _AddNewSeminarTimeSlotPopupBuilderState extends State<AddNewSeminarTimeSlo
                     child: ListTile(
                         title: TextFormField(
                           decoration: InputDecoration(
-                              hintText: "Enter Location"
+                              hintText: "Enter Location",
+                              hintStyle: TextStyle(
+                                  color: Colors.black54
+                              )
                           ),
                           onChanged: (inputValue)  {
                             location = inputValue;
