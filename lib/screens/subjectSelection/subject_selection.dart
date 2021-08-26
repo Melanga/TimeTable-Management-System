@@ -27,12 +27,11 @@ class _SubjectSelectionState extends State<SubjectSelection> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _setSubjectList();
     _categorizeUser();
     _getSubjectList();
-    _setYearMap();
+
     try {
       Future<Map<String, dynamic>> selectedSubjects = _getSelectedSubjects();
       selectedSubjects.then((value) {
@@ -153,10 +152,11 @@ class _SubjectSelectionState extends State<SubjectSelection> {
   }
   
   _getSubjectList() async{
+    await _setYearMap();
     List <String>returnSubjectList = [];
     final userEmail = FirebaseAuth.instance.currentUser.email;
     final String degree = userEmail.substring(0,3).toUpperCase();
-    final String year = this.yearMap[userEmail.substring(3, 5)];
+    final String year = yearMap[userEmail.substring(3, 5)];
     if(userCategory == "lecturer"){
       await FirebaseFirestore.instance.collection('Subjects').where(FieldPath.documentId, whereIn: this.subjectList).get().then((doc) {
         if(doc != null){
@@ -166,9 +166,11 @@ class _SubjectSelectionState extends State<SubjectSelection> {
         }
       });
     } else {
-      QuerySnapshot subjectGroups = await FirebaseFirestore.instance.collection('SubjectGroup').where('degree', isEqualTo: degree).where('year', isEqualTo: year).get();
+      QuerySnapshot subjectGroups = await FirebaseFirestore.instance.collection('SubjectGroup').where('degree', isEqualTo: degree).get();
       subjectGroups.docs.forEach((subjectGroup) {
-        returnSubjectList.add(subjectGroup.data()['course_Code']);
+        if(subjectGroup.data()['year'] == year) {
+          returnSubjectList.add(subjectGroup.data()['course_Code']);
+        }
       });
     }
     setState(() {
@@ -195,7 +197,7 @@ class _SubjectSelectionState extends State<SubjectSelection> {
     final userEmail = FirebaseAuth.instance.currentUser.email;
     if(userEmail.endsWith("@uwu.ac.lk")){
       setState(() => {this.userCategory = "lecturer"});
-    } else if (userEmail.endsWith("@example.com")){
+    } else if (userEmail.endsWith("@std.uwu.ac.lk")){
       setState(() => {this.userCategory = "student"});
     }
   }
@@ -207,8 +209,8 @@ class _SubjectSelectionState extends State<SubjectSelection> {
           yearMap[element.data()['email_No'].toString()] = element.id;
         });
       }
-      setState(() {
-      });
+    });
+    setState(() {
     });
   }
 

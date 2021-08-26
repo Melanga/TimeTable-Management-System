@@ -21,7 +21,6 @@ class _SemesterSettingsState extends State<SemesterSettings> {
 
   @override
   Widget build(BuildContext context) {
-    print(yearMap.values);
     return Scaffold(
       appBar: AppBar(
         title: Text("Semester Settings"),
@@ -40,6 +39,7 @@ class _SemesterSettingsState extends State<SemesterSettings> {
                           return ListView(
                             shrinkWrap: true,
                             children: snapshot.data.docs.map((doc) {
+                              yearMap[doc.id] = doc.data()['email_No'];
                               return Hero(
                                 tag: doc.id,
                                 child: Padding(
@@ -80,10 +80,22 @@ class _SemesterSettingsState extends State<SemesterSettings> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         IconButton(
-                            onPressed: ()=>{_decrementSemester()},
+                            onPressed: () async{
+                              await _decrementSemester();
+                              setState(() {
+
+                              });
+                              //_setYearMap();
+                            },
                             icon: Icon(Icons.minimize)),
                         IconButton(
-                            onPressed: ()=>{_incrementSemester()},
+                            onPressed: () async{
+                              await _incrementSemester();
+                              setState(() {
+
+                              });
+                              //_setYearMap();
+                              },
                             icon: Icon(Icons.add))
                       ],
                     ),
@@ -97,15 +109,15 @@ class _SemesterSettingsState extends State<SemesterSettings> {
     );
   }
 
-  _incrementSemester(){
-    yearMap.keys.forEach((year) {
-      semesterData.doc(year).update({'email_No': (yearMap[year]+1)});
+  _incrementSemester() async{
+    yearMap.keys.forEach((year) async{
+      await semesterData.doc(year).update({'email_No': (yearMap[year]+1)});
     });
     //semesterData.doc("100").update({'email_No': semesterData.doc('100')['email_No']+1})
   }
   _decrementSemester(){
-    yearMap.keys.forEach((year) {
-      semesterData.doc(year).update({'email_No': (yearMap[year]-1)});
+    yearMap.keys.forEach((year) async{
+      await semesterData.doc(year).update({'email_No': (yearMap[year]-1)});
     });
   }
   _setYearMap() async{
@@ -115,6 +127,9 @@ class _SemesterSettingsState extends State<SemesterSettings> {
           yearMap[element.id] = element.data()['email_No'];
         });
       }
+    });
+    setState(() {
+
     });
   }
 }
