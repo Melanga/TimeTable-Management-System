@@ -5,10 +5,16 @@ import 'package:flutter_intelij/screens/authenticate/register/register.dart';
 import 'package:flutter_intelij/screens/authenticate/register/signin.dart';
 import 'package:flutter_intelij/screens/wrappers/login_wrapper.dart';
 import 'package:flutter_intelij/services/auth.dart';
+import 'package:flutter_intelij/services/daily_notification.dart';
 import 'package:flutter_intelij/shared/loading.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 void main() async{
+  tz.initializeTimeZones();
+  DailyNotification dailyNotification= new DailyNotification();
+  dailyNotification.initializeSettings();
   runApp(MyApp());
 }
 

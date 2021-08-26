@@ -15,9 +15,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    tz.initializeTimeZones();
-    DailyNotification dailyNotification= new DailyNotification();
-    dailyNotification.initializeSettings();
   }
   @override
   Widget build(BuildContext context) {
