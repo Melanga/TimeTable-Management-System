@@ -1,6 +1,6 @@
-# flutter_intelij
+# University Timetable and Task Management Companion App
 
-A new Flutter project.
+A mobile app designed to manage Weekly Recurring Time Table for Universities. Including Hall availability checking, Seminar management, Subject management, and personal task management for Students and Lecturers. With university email integration for security and user categorization
 
 ## INTRODUCTION
 
@@ -12,3 +12,8 @@ In the existing system new semester timetables are put on the notice board at th
    * Student
    * Lecturer
    * Admin
+ 
+## Used Technologies:
+  * Flutter
+  * Firebase
+  * SQLite
